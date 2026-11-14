@@ -1,0 +1,198 @@
+{
+  "_README": "EXAMPLE ONLY. Copy the blocks you need into lib/rules.json (inside \"courses\") and replace the placeholder names, modules and units with the real ones. Do not rename this file to rules.json. Cycle 3 style: a level has attachment_modules. Cycle 2 style: a level has a plain \"units\" list and no modules, so the form hides the Module box.",
+  "courses": {
+    "Civil Engineering": {
+      "sections": {
+        "Building Technology": {
+          "cycles": {
+            "3": {
+              "levels": {
+                "4": {
+                  "attachment_modules": {
+                    "2": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4"
+                      ]
+                    }
+                  }
+                },
+                "5": {
+                  "attachment_modules": {
+                    "4": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4",
+                        "Core unit 5",
+                        "Core unit 6"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Plumbing": {
+          "cycles": {
+            "3": {
+              "levels": {
+                "4": {
+                  "attachment_modules": {
+                    "2": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4"
+                      ]
+                    }
+                  }
+                },
+                "5": {
+                  "attachment_modules": {
+                    "4": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4",
+                        "Core unit 5",
+                        "Core unit 6"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Hospitality": {
+      "sections": {
+        "Food and Beverage": {
+          "cycles": {
+            "3": {
+              "levels": {
+                "4": {
+                  "attachment_modules": {
+                    "2": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4"
+                      ]
+                    }
+                  }
+                },
+                "5": {
+                  "attachment_modules": {
+                    "4": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4",
+                        "Core unit 5",
+                        "Core unit 6"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Cosmetology": {
+          "cycles": {
+            "3": {
+              "levels": {
+                "4": {
+                  "attachment_modules": {
+                    "2": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4"
+                      ]
+                    }
+                  }
+                },
+                "5": {
+                  "attachment_modules": {
+                    "4": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4",
+                        "Core unit 5",
+                        "Core unit 6"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Liberal Studies": {
+      "option": "",
+      "cycles": {
+        "3": {
+          "levels": {
+            "4": {
+              "attachment_modules": {
+                "2": {
+                  "units": [
+                    "Core unit 1",
+                    "Core unit 2",
+                    "Core unit 3",
+                    "Core unit 4"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "2": {
+          "levels": {
+            "4": {
+              "units": [
+                "Core unit 1",
+                "Core unit 2",
+                "Core unit 3"
+              ]
+            },
+            "5": {
+              "units": [
+                "Core unit 1",
+                "Core unit 2",
+                "Core unit 3",
+                "Core unit 4"
+              ]
+            },
+            "6": {
+              "units": [
+                "Core unit 1",
+                "Core unit 2",
+                "Core unit 3",
+                "Core unit 4",
+                "Core unit 5"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

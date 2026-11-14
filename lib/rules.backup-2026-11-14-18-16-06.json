@@ -1,0 +1,192 @@
+{
+  "courses": {
+    "Electrical Engineering": {
+      "option": "power option",
+      "cycles": {
+        "3": {
+          "levels": {
+            "4": {
+              "attachment_modules": {
+                "2": {
+                  "units": [
+                    "PVC sheathed Cable System Installation",
+                    "Trunking System Installation",
+                    "Conduit System Installation",
+                    "Stand alone PV systems",
+                    "Bell and alarm installation",
+                    "Electrical Machine Winding"
+                  ]
+                }
+              }
+            },
+            "5": {
+              "attachment_modules": {
+                "5": {
+                  "units": [
+                    "PVC sheathed Cable System Installation",
+                    "Trunking System Installation",
+                    "Conduit System Installation",
+                    "Stand alone PV systems",
+                    "Bell and alarm installation",
+                    "Electrical Machine Winding",
+                    "Electrical Installation",
+                    "Security System Installation",
+                    "Solar PV systems Installation"
+                  ]
+                }
+              }
+            },
+            "6": {
+              "attachment_modules": {
+                "5": {
+                  "same_as": ["5", "5"]
+                },
+                "8": {
+                  "units": [
+                    "Install PVC sheathed Cable System",
+                    "Install trunking System",
+                    "Install conduit System",
+                    "Install stand-alone solar PV systems",
+                    "Perform bell and alarm installation",
+                    "Wind electrical Machine",
+                    "Perform electrical Installation",
+                    "Perform security systems Installation",
+                    "Perform electrical Machine installation",
+                    "Install solar PV systems",
+                    "Install electrical Power lines",
+                    "Automate electrical Systems",
+                    "Fabricate power electronic circuits"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Liberal Studies": {
+      "cycles": {
+        "3": {
+          "levels": {
+            "5": {
+              "attachment_modules": {
+                "3": {
+                  "units": [
+                    "Manage Community Based Growth",
+                    "Conduct Home Based Care",
+                    "Coordinate Child Welfare Programes",
+                    "Provide Psychosocial Support",
+                    "Coordinate Community Empowerment",
+                    "Manage Social Work Case Management",
+                    "Coordinate Advocacy and Lobbying Activities",
+                    "Conduct Disaster Management"
+                  ]
+                }
+              }
+            },
+            "6": {
+              "attachment_modules": {
+                "3": {
+                    "same_as": ["5", "5"]
+                },
+                "5": {
+                  "units" : [
+                    "Manage Community Based Growth",
+                    "Conduct Home Based Care",
+                    "Coordinate Child Welfare Programes",
+                    "Provide Psychosocial Support",
+                    "Coordinate Community Empowerment",
+                    "Manage Social Work Case Management",
+                    "Coordinate Advocacy and Lobbying Activities",
+                    "Conduct Disaster Management",
+                    "Carry Out Resource Mobilization",
+                    "Social Work Services Management",
+                    "Rehabilitation and Re-integration Programes",
+                    "Conduct Social Policy Administration",
+                    "Manage Community Project",
+                    "Conduct Social Work Research"
+                  ]
+                }
+
+              }
+            }
+           
+          }
+        }
+      }
+    },
+    "Civil Engineering": {
+      "sections": {
+        "Building Technology": {
+          "cycles": {
+            "3": {
+              "levels": {
+                "4": {
+                  "attachment_modules": {
+                    "2": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4"
+                      ]
+                    }
+                  }
+                },
+                "5": {
+                  "attachment_modules": {
+                    "4": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4",
+                        "Core unit 5",
+                        "Core unit 6"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Plumbing": {
+          "cycles": {
+            "3": {
+              "levels": {
+                "4": {
+                  "attachment_modules": {
+                    "2": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4"
+                      ]
+                    }
+                  }
+                },
+                "5": {
+                  "attachment_modules": {
+                    "4": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4",
+                        "Core unit 5",
+                        "Core unit 6"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+  }
+}
