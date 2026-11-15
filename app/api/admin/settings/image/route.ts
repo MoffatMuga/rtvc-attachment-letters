@@ -14,8 +14,8 @@ export async function POST(req: NextRequest) {
   if (!(kind in KEYS) || !(file instanceof File)) {
     return Response.json({ error: "Choose a stamp or signature image." }, { status: 400 });
   }
-  if (file.size > 8 * 1024 * 1024) {
-    return Response.json({ error: "Image is too large (max 8 MB)." }, { status: 400 });
+  if (file.size > 4 * 1024 * 1024) {
+    return Response.json({ error: "Image is too large (max 4 MB)." }, { status: 400 });
   }
   try {
     const png = await cleanScan(Buffer.from(await file.arrayBuffer()));
