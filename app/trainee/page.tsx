@@ -26,6 +26,24 @@ const FIELDS = [
 
 const input = "w-full rounded-lg border border-slate-300 px-3 py-2.5 text-base";
 
+function Block({ title, rows }: { title: string; rows: [string, string | null][] }) {
+  return (
+    <div>
+      <h3 className="mb-1 text-xs font-semibold uppercase tracking-wider text-slate-400">{title}</h3>
+      <dl className="divide-y divide-slate-100 text-sm">
+        {rows.map(([k, v]) => (
+          <div key={k} className="flex justify-between gap-4 py-1.5">
+            <dt className="text-slate-500">{k}</dt>
+            <dd className="text-right font-medium text-slate-800">
+              {v ? (k.includes("hone") ? <a href={`tel:${v}`} className="underline">{v}</a> : v) : <span className="font-normal text-slate-300">-</span>}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
 export default function TraineePage() {
   const [me, setMe] = useState<Me | null | undefined>(undefined);
   const [step, setStep] = useState<"email" | "code">("email");
@@ -36,6 +54,7 @@ export default function TraineePage() {
   const [form, setForm] = useState<Record<string, string>>({});
   const [consent, setConsent] = useState(false);
   const [saved, setSaved] = useState("");
+  const [editing, setEditing] = useState(false);
 
   const load = useCallback(async () => {
     const res = await fetch("/api/trainee/me");
@@ -77,7 +96,7 @@ export default function TraineePage() {
     });
     const data = await res.json().catch(() => ({}));
     setBusy(false);
-    if (res.ok) { setSaved("Saved. Thank you."); load(); } else setErr(data.error ?? "Could not save.");
+    if (res.ok) { setSaved("Your details were saved."); setEditing(false); await load(); window.scrollTo({ top: 0, behavior: "smooth" }); } else setErr(data.error ?? "Could not save.");
   }
 
   async function logout() {
@@ -126,6 +145,7 @@ export default function TraineePage() {
   }
 
   const t = me.trainee;
+  const hasProfile = !!t.profile_updated_at;
   return (
     <main className="mx-auto w-full max-w-xl flex-1 px-4 py-6">
       <div className="mb-4 flex items-center justify-between">
@@ -174,6 +194,28 @@ export default function TraineePage() {
         </ul>
       </section>
 
+      {hasProfile && !editing ? (
+        <section className="space-y-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold">Where you are attached</h2>
+            <button onClick={() => { setSaved(""); setErr(""); setEditing(true); }}
+              className="rounded-lg px-3 py-1.5 text-sm ring-1 ring-slate-300">Edit</button>
+          </div>
+          {saved && <p className="rounded-lg bg-green-50 p-3 text-sm text-green-800">{saved}</p>}
+          <Block title="Firm" rows={[
+            ["Name", t.firm_name], ["Town / county", t.firm_location], ["Address", t.firm_address],
+            ["Phone", t.firm_phone], ["Department", t.department_at_firm],
+          ]} />
+          <Block title="Supervisor" rows={[
+            ["Name", t.supervisor_name], ["Job title", t.supervisor_title],
+            ["Phone", t.supervisor_phone], ["Email", t.supervisor_email],
+          ]} />
+          <Block title="Attachment" rows={[
+            ["Started", t.start_date], ["Expected end", t.end_date], ["Your phone", t.phone],
+          ]} />
+          <p className="text-xs text-slate-400">Last updated {(t.profile_updated_at ?? "").slice(0, 10)}</p>
+        </section>
+      ) : (
       <form onSubmit={save} className="space-y-3 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
         <h2 className="font-semibold">Where you are attached</h2>
         <p className="text-sm text-slate-600">Fill this in once you have been accepted by a firm. Fields marked * are required.</p>
@@ -199,7 +241,12 @@ export default function TraineePage() {
         <button disabled={busy} className="w-full rounded-lg bg-blue-900 px-4 py-3 font-semibold text-white disabled:opacity-50">
           {busy ? "Saving..." : "Save details"}
         </button>
+        {hasProfile && (
+          <button type="button" onClick={() => { setEditing(false); setErr(""); load(); }}
+            className="w-full text-sm text-slate-500 underline">Cancel</button>
+        )}
       </form>
+      )}
     </main>
   );
 }
