@@ -1,5 +1,6 @@
 "use client";
 
+import Choice from "@/components/Choice";
 import PrivacyNotice from "@/components/PrivacyNotice";
 import { useEffect, useMemo, useState } from "react";
 
@@ -81,7 +82,6 @@ export default function Home() {
   const modules = useMemo(() => tree?.[cycle]?.[level] ?? [], [tree, cycle, level]);
   const ready = !!course && (!hasSections || !!section);
   const needsModule = modules.length > 0;
-  const showModule = !level || needsModule; // hidden for levels that have no modules
 
   const emailClean = email.trim().toLowerCase();
   const emailsMatch = emailClean === email2.trim().toLowerCase();
@@ -195,60 +195,50 @@ export default function Home() {
               <p className={`${group} pt-2`}>Your course</p>
               <div>
                 <label className={label}>Course</label>
-                <select className={field} value={course} required
-                  onChange={(e) => { setCourse(e.target.value); setSection(""); setCycle(""); setLevel(""); setModule(""); }}>
-                  <option value="">Select course</option>
-                  {courses.map((c) => <option key={c}>{c}</option>)}
-                </select>
+                <Choice ariaLabel="Course" cols="grid-cols-1" value={course}
+                  options={courses.map((c) => ({ value: c, label: c }))}
+                  onChange={(v) => { setCourse(v); setSection(""); setCycle(""); setLevel(""); setModule(""); }} />
               </div>
               {hasSections && (
                 <div>
                   <label className={label}>Section</label>
-                  <select className={field} value={section} required
-                    onChange={(e) => { setSection(e.target.value); setCycle(""); setLevel(""); setModule(""); }}>
-                    <option value="">Select section</option>
-                    {sections.map((x) => <option key={x}>{x}</option>)}
-                  </select>
+                  <Choice ariaLabel="Section" cols="grid-cols-1" value={section}
+                    options={sections.map((x) => ({ value: x, label: x }))}
+                    onChange={(v) => { setSection(v); setCycle(""); setLevel(""); setModule(""); }} />
                 </div>
               )}
-              <div className={`grid gap-3 ${showModule ? "grid-cols-3" : "grid-cols-2"}`}>
+              {ready && (
                 <div>
                   <label className={label}>Cycle</label>
-                  <select className={field} value={cycle} required disabled={!ready}
-                    onChange={(e) => { setCycle(e.target.value); setLevel(""); setModule(""); }}>
-                    <option value="">-</option>
-                    {cycles.map((c) => <option key={c} value={c}>{c}</option>)}
-                  </select>
+                  <Choice ariaLabel="Cycle" cols="grid-cols-3" value={cycle}
+                    options={cycles.map((c) => ({ value: c, label: `Cycle ${c}` }))}
+                    onChange={(v) => { setCycle(v); setLevel(""); setModule(""); }} />
                 </div>
+              )}
+              {cycle && (
                 <div>
                   <label className={label}>Level</label>
-                  <select className={field} value={level} required disabled={!cycle}
-                    onChange={(e) => { setLevel(e.target.value); setModule(""); }}>
-                    <option value="">-</option>
-                    {levels.map((l) => <option key={l} value={l}>{l}</option>)}
-                  </select>
+                  <Choice ariaLabel="Level" cols="grid-cols-3" value={level}
+                    options={levels.map((l) => ({ value: l, label: `Level ${l}` }))}
+                    onChange={(v) => { setLevel(v); setModule(""); }} />
                 </div>
-                {showModule && (
-                  <div>
-                    <label className={label}>Module</label>
-                    <select className={field} value={module} required={needsModule} disabled={!level}
-                      onChange={(e) => setModule(e.target.value)}>
-                      <option value="">-</option>
-                      {modules.map((m) => <option key={m} value={m}>{m}</option>)}
-                    </select>
-                  </div>
-                )}
-              </div>
+              )}
+              {level && needsModule && (
+                <div>
+                  <label className={label}>Module</label>
+                  <Choice ariaLabel="Module" cols="grid-cols-3" value={module}
+                    options={modules.map((m) => ({ value: m, label: `Module ${m}` }))}
+                    onChange={setModule} />
+                </div>
+              )}
 
               <p className={`${group} pt-2`}>Attachment starts (3 months)</p>
-              <div className="grid grid-cols-2 gap-3">
-                <select className={field} value={month} onChange={(e) => setMonth(e.target.value)} aria-label="Month">
-                  {MONTHS.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
-                </select>
-                <select className={field} value={year} onChange={(e) => setYear(e.target.value)} aria-label="Year">
-                  {[now.getFullYear(), now.getFullYear() + 1].map((y) => <option key={y}>{y}</option>)}
-                </select>
-              </div>
+              <Choice ariaLabel="Month" cols="grid-cols-4" value={month}
+                options={MONTHS.map((m, i) => ({ value: String(i + 1), label: m.slice(0, 3) }))}
+                onChange={setMonth} />
+              <Choice ariaLabel="Year" cols="grid-cols-2" value={year}
+                options={[now.getFullYear(), now.getFullYear() + 1].map((y) => ({ value: String(y), label: String(y) }))}
+                onChange={setYear} />
 
               {/* Honeypot: hidden from people, bots fill it in */}
               <input className="hidden" tabIndex={-1} autoComplete="off" value={website}

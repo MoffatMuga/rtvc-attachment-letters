@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["sharp", "exceljs", "nodemailer", "@libsql/client"],
+  serverExternalPackages: ["sharp", "exceljs", "nodemailer", "pg"],
   turbopack: {
     rules: {
       "*.css": {
