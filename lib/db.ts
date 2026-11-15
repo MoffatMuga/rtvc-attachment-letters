@@ -49,6 +49,46 @@ export function ensureDb(): Promise<void> {
           value TEXT NOT NULL
         )`,
         `INSERT OR IGNORE INTO settings (key, value) VALUES ('last_ref_no', '0')`,
+        `CREATE TABLE IF NOT EXISTS assessors (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          email TEXT NOT NULL DEFAULT '',
+          phone TEXT NOT NULL DEFAULT '',
+          department TEXT NOT NULL DEFAULT ''
+        )`,
+        `CREATE TABLE IF NOT EXISTS trainees (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          created_at TEXT NOT NULL,
+          adm_no TEXT NOT NULL UNIQUE,
+          name TEXT NOT NULL,
+          email TEXT NOT NULL,
+          phone TEXT NOT NULL DEFAULT '',
+          assessor_id INTEGER,
+          assigned_at TEXT,
+          firm_name TEXT NOT NULL DEFAULT '',
+          firm_location TEXT NOT NULL DEFAULT '',
+          firm_address TEXT NOT NULL DEFAULT '',
+          firm_phone TEXT NOT NULL DEFAULT '',
+          department_at_firm TEXT NOT NULL DEFAULT '',
+          supervisor_name TEXT NOT NULL DEFAULT '',
+          supervisor_title TEXT NOT NULL DEFAULT '',
+          supervisor_phone TEXT NOT NULL DEFAULT '',
+          supervisor_email TEXT NOT NULL DEFAULT '',
+          start_date TEXT NOT NULL DEFAULT '',
+          end_date TEXT NOT NULL DEFAULT '',
+          profile_updated_at TEXT,
+          consent_at TEXT,
+          last_login_at TEXT
+        )`,
+        `CREATE INDEX IF NOT EXISTS trainees_email_idx ON trainees (email)`,
+        `CREATE TABLE IF NOT EXISTS login_codes (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          email TEXT NOT NULL,
+          code_hash TEXT NOT NULL,
+          expires_at INTEGER NOT NULL,
+          attempts INTEGER NOT NULL DEFAULT 0,
+          created_at INTEGER NOT NULL
+        )`,
       ]);
       // Upgrade older databases that were created before the phone column.
       const cols = await c.execute("PRAGMA table_info(requests)");

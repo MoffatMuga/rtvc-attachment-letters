@@ -25,7 +25,7 @@ export async function POST(
     await sendMail({
       to: row.email,
       subject: "Your attachment letter request - Rangwe TVC",
-      text: `Dear ${row.name},\n\nYour attachment letter request was not approved.\nReason: ${why}\n\nYou can submit a new request once this is sorted.\n\nIndustrial Liaison Office\nRangwe Technical and Vocational College`,
+      text: `Dear ${row.name},\n\nYour attachment letter request was not approved.\nReason: ${why}\n\nYou can submit a new request once this is sorted.\n\nILO Connect\nIndustrial Liaison Office, Rangwe Technical and Vocational College`,
     });
   } catch (e) {
     console.error("Reject email failed", e);

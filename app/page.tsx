@@ -1,5 +1,6 @@
 "use client";
 
+import PrivacyNotice from "@/components/PrivacyNotice";
 import { useEffect, useMemo, useState } from "react";
 
 // course -> section ("" when none) -> cycle -> level -> modules
@@ -11,14 +12,45 @@ const MONTHS = [
 ];
 
 const field =
-  "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-base outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-200";
+  "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-base outline-none transition focus:border-blue-800 focus:ring-2 focus:ring-blue-200 disabled:bg-slate-100 disabled:text-slate-400";
 const label = "mb-1 block text-sm font-medium text-slate-700";
+const group = "text-xs font-semibold uppercase tracking-wider text-slate-400";
+
+// Common mistakes in the part after the @, e.g. gmial.com
+const DOMAIN_FIXES: Record<string, string> = {
+  "gmial.com": "gmail.com", "gmai.com": "gmail.com", "gmail.con": "gmail.com", "gmail.co": "gmail.com",
+  "gmail.cm": "gmail.com", "gnail.com": "gmail.com", "gmail.om": "gmail.com", "gmaill.com": "gmail.com",
+  "gamil.com": "gmail.com", "yaho.com": "yahoo.com", "yahoo.con": "yahoo.com", "yahooo.com": "yahoo.com",
+  "hotmial.com": "hotmail.com", "hotmail.con": "hotmail.com", "outlook.con": "outlook.com",
+};
+function emailTypo(e: string): string | null {
+  const at = e.lastIndexOf("@");
+  if (at < 1) return null;
+  const fix = DOMAIN_FIXES[e.slice(at + 1)];
+  return fix ? `${e.slice(0, at)}@${fix}` : null;
+}
+
+const STEPS = [
+  "Receive your attachment letter in your email",
+  "Fill in your attachment details",
+  "Know your assessor",
+];
+function Steps({ className, numClass }: { className: string; numClass: string }) {
+  return (
+    <ol className={className}>
+      {STEPS.map((t, i) => (
+        <li key={t} className="flex gap-3"><span className={numClass}>{i + 1}</span> {t}</li>
+      ))}
+    </ol>
+  );
+}
 
 export default function Home() {
   const [rules, setRules] = useState<Rules | null>(null);
   const [name, setName] = useState("");
   const [adm, setAdm] = useState("");
   const [email, setEmail] = useState("");
+  const [email2, setEmail2] = useState("");
   const [phone, setPhone] = useState("");
   const [course, setCourse] = useState("");
   const [section, setSection] = useState("");
@@ -51,9 +83,14 @@ export default function Home() {
   const needsModule = modules.length > 0;
   const showModule = !level || needsModule; // hidden for levels that have no modules
 
+  const emailClean = email.trim().toLowerCase();
+  const emailsMatch = emailClean === email2.trim().toLowerCase();
+  const typo = emailTypo(emailClean);
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    if (!emailsMatch) { setError("The two email addresses are not the same."); return; }
     setBusy(true);
     try {
       const res = await fetch("/api/requests", {
@@ -75,140 +112,161 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-1 flex-col lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
-      {/* Left panel: large screens only */}
-      <aside className="hidden flex-col items-center justify-center gap-10 bg-gradient-to-br from-blue-950 to-blue-800 px-12 text-white lg:flex">
-        <div className="flex items-center gap-6 rounded-2xl bg-white p-6 shadow-lg">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/logo.png" alt="Rangwe TVC logo" className="h-32 w-auto" />
+    // Phones: blue header stays at the top and only the form scrolls.
+    // Large screens: blue panel stays on the left and only the form side scrolls.
+    <div className="flex min-h-dvh flex-col lg:grid lg:h-dvh lg:grid-cols-[5fr_6fr] lg:overflow-hidden">
+      <header className="sticky top-0 z-20 flex items-center gap-3 bg-blue-900 px-4 py-3 text-white shadow-md lg:hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/assets/logo.png" alt="Rangwe TVC logo" className="h-12 w-auto shrink-0 rounded-md bg-white p-1" />
+        <div className="min-w-0">
+          <p className="truncate text-[11px] font-semibold uppercase tracking-wide text-blue-200">
+            Rangwe Technical &amp; Vocational College
+          </p>
+          <h1 className="text-lg font-bold leading-tight">ILO Connect</h1>
         </div>
-        <div className="max-w-sm">
-          <h2 className="text-center text-3xl font-bold">Industrial Attachment Letters</h2>
-          <ol className="mt-6 space-y-3 text-blue-100">
-            <li className="flex gap-3"><span className="font-bold text-white">1.</span> Fill in your details and pick your module.</li>
-            <li className="flex gap-3"><span className="font-bold text-white">2.</span> The Industrial Liaison Officer reviews your request.</li>
-            <li className="flex gap-3"><span className="font-bold text-white">3.</span> Your letter arrives by email as a PDF.</li>
-          </ol>
-        </div>
-      </aside>
-    <main className="mx-auto w-full max-w-lg flex-1 px-4 py-8 lg:flex lg:flex-col lg:justify-center">
-      <header className="mb-6 text-center">
-        {/* Logos on top for phones and tablets */}
-        <div className="mb-3 flex items-center justify-center gap-4 lg:hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/logo.png" alt="Rangwe TVC logo" className="h-16 w-auto" />
-        </div>
-        <p className="text-sm font-semibold tracking-wide text-blue-900">
-          RANGWE TECHNICAL &amp; VOCATIONAL COLLEGE
-        </p>
-        <h1 className="mt-1 text-2xl font-bold">Industrial Attachment Letter</h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Fill in your details. Your letter is emailed to you once the Industrial Liaison Officer approves.
-        </p>
       </header>
 
-      {done ? (
-        <div className="rounded-xl border border-green-200 bg-green-50 p-6 text-center">
-          <p className="text-lg font-semibold text-green-800">Request received</p>
-          <p className="mt-2 text-sm text-green-900">
-            You will get your letter at <b>{email}</b> after approval. Check your spam folder too.
+      <aside className="hidden flex-col items-center justify-center gap-8 bg-blue-900 px-12 text-white lg:flex">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/assets/logo.png" alt="Rangwe TVC logo" className="h-28 w-auto rounded-xl bg-white p-3" />
+        <div className="max-w-sm text-center">
+          <p className="text-xs font-semibold uppercase tracking-widest text-blue-200">
+            Rangwe Technical &amp; Vocational College
           </p>
+          <h1 className="mt-2 text-4xl font-bold">ILO Connect</h1>
+          <p className="mt-2 text-blue-100">Your one-stop Industrial Liaison Office</p>
         </div>
-      ) : (
-        <form onSubmit={submit} className="space-y-4 rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <div>
-            <label className={label}>Full name</label>
-            <input className={field} value={name} onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Job Opiyo" required autoComplete="name" />
-          </div>
-          <div>
-            <label className={label}>Admission number (in full)</label>
-            <input className={`${field} uppercase`} value={adm} onChange={(e) => setAdm(e.target.value)}
-              placeholder="EEPL6/1592/24M" required />
-          </div>
-          <div>
-            <label className={label}>Your email</label>
-            <input type="email" className={field} value={email} onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@gmail.com" required autoComplete="email" />
-          </div>
-          <div>
-            <label className={label}>Phone number</label>
-            <input type="tel" inputMode="tel" className={field} value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="0712 345 678" required autoComplete="tel" />
-          </div>
-          <div>
-            <label className={label}>Course</label>
-            <select className={field} value={course} required
-              onChange={(e) => { setCourse(e.target.value); setSection(""); setCycle(""); setLevel(""); setModule(""); }}>
-              <option value="">Select course</option>
-              {courses.map((c) => <option key={c}>{c}</option>)}
-            </select>
-          </div>
-          {hasSections && (
-            <div>
-              <label className={label}>Section</label>
-              <select className={field} value={section} required
-                onChange={(e) => { setSection(e.target.value); setCycle(""); setLevel(""); setModule(""); }}>
-                <option value="">Select section</option>
-                {sections.map((x) => <option key={x}>{x}</option>)}
-              </select>
+        <Steps className="max-w-xs space-y-3 text-sm text-blue-100" numClass="font-bold text-white" />
+      </aside>
+
+      <main className="flex-1 lg:overflow-y-auto">
+        <div className="mx-auto w-full max-w-md px-5 py-6 lg:py-12">
+          {done ? (
+            <div className="rounded-xl bg-green-50 p-6 text-center ring-1 ring-green-200">
+              <p className="text-lg font-semibold text-green-800">Request received</p>
+              <p className="mt-2 text-sm text-green-900">
+                Your letter will be sent to <b>{emailClean}</b> after approval. Check your spam folder too.
+              </p>
             </div>
-          )}
-          <div className={`grid gap-3 ${showModule ? "grid-cols-3" : "grid-cols-2"}`}>
-            <div>
-              <label className={label}>Cycle</label>
-              <select className={field} value={cycle} required disabled={!ready}
-                onChange={(e) => { setCycle(e.target.value); setLevel(""); setModule(""); }}>
-                <option value="">-</option>
-                {cycles.map((c) => <option key={c} value={c}>Cycle {c}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className={label}>Level</label>
-              <select className={field} value={level} required disabled={!cycle}
-                onChange={(e) => { setLevel(e.target.value); setModule(""); }}>
-                <option value="">-</option>
-                {levels.map((l) => <option key={l} value={l}>Level {l}</option>)}
-              </select>
-            </div>
-            {showModule && (
+          ) : (
+            <form onSubmit={submit} className="space-y-4">
+              <div className="lg:hidden">
+                <p className="text-sm font-medium text-slate-700">Your one-stop Industrial Liaison Office</p>
+                <Steps className="mt-2 space-y-1.5 text-sm text-slate-600" numClass="font-bold text-blue-900" />
+              </div>
+              <p className="hidden text-sm font-medium text-slate-700 lg:block">Request your attachment letter</p>
+
+              <p className={group}>You</p>
               <div>
-                <label className={label}>Module</label>
-                <select className={field} value={module} required={needsModule} disabled={!level}
-                  onChange={(e) => setModule(e.target.value)}>
-                  <option value="">-</option>
-                  {modules.map((m) => <option key={m} value={m}>Module {m}</option>)}
+                <label className={label}>Full name</label>
+                <input className={field} value={name} onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Job Opiyo" required autoComplete="name" />
+              </div>
+              <div>
+                <label className={label}>Admission number (in full)</label>
+                <input className={`${field} uppercase`} value={adm} onChange={(e) => setAdm(e.target.value)}
+                  placeholder="EEPL6/1592/24M" required />
+              </div>
+              <div>
+                <label className={label}>Email</label>
+                <input type="email" className={field} value={email} onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@gmail.com" required autoComplete="email" />
+                {typo && (
+                  <p className="mt-1 text-sm text-amber-700">
+                    Did you mean{" "}
+                    <button type="button" className="font-semibold underline" onClick={() => setEmail(typo)}>{typo}</button>?
+                  </p>
+                )}
+              </div>
+              <div>
+                <label className={label}>Confirm email</label>
+                <input type="email" className={field} value={email2} onChange={(e) => setEmail2(e.target.value)}
+                  onPaste={(e) => e.preventDefault()} placeholder="Type it again" required autoComplete="off" />
+                {email2 && !emailsMatch && <p className="mt-1 text-sm text-red-700">The emails do not match yet.</p>}
+                {email2 && emailsMatch && <p className="mt-1 text-sm text-green-700">Emails match.</p>}
+              </div>
+              <div>
+                <label className={label}>Phone</label>
+                <input type="tel" inputMode="tel" className={field} value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="0712 345 678" required autoComplete="tel" />
+              </div>
+
+              <p className={`${group} pt-2`}>Your course</p>
+              <div>
+                <label className={label}>Course</label>
+                <select className={field} value={course} required
+                  onChange={(e) => { setCourse(e.target.value); setSection(""); setCycle(""); setLevel(""); setModule(""); }}>
+                  <option value="">Select course</option>
+                  {courses.map((c) => <option key={c}>{c}</option>)}
                 </select>
               </div>
-            )}
-          </div>
-          <div>
-            <label className={label}>Attachment starts (three months)</label>
-            <div className="grid grid-cols-2 gap-3">
-              <select className={field} value={month} onChange={(e) => setMonth(e.target.value)}>
-                {MONTHS.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
-              </select>
-              <select className={field} value={year} onChange={(e) => setYear(e.target.value)}>
-                {[now.getFullYear(), now.getFullYear() + 1].map((y) => <option key={y}>{y}</option>)}
-              </select>
-            </div>
-          </div>
-          {/* Honeypot: hidden from people, bots fill it in */}
-          <input className="hidden" tabIndex={-1} autoComplete="off" value={website}
-            onChange={(e) => setWebsite(e.target.value)} aria-hidden="true" />
-          {error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-800">{error}</p>}
-          <button disabled={busy || !level || (needsModule && !module)}
-            className="w-full rounded-lg bg-blue-900 px-4 py-3 font-semibold text-white disabled:opacity-50">
-            {busy ? "Sending..." : "Request my letter"}
-          </button>
-        </form>
-      )}
-      <p className="mt-6 text-center text-xs text-slate-500">
-        Industrial Liaison Office, RTVC ·{" "}
-        <a href="/admin" className="underline">ILO sign in</a>
-      </p>
-    </main>
+              {hasSections && (
+                <div>
+                  <label className={label}>Section</label>
+                  <select className={field} value={section} required
+                    onChange={(e) => { setSection(e.target.value); setCycle(""); setLevel(""); setModule(""); }}>
+                    <option value="">Select section</option>
+                    {sections.map((x) => <option key={x}>{x}</option>)}
+                  </select>
+                </div>
+              )}
+              <div className={`grid gap-3 ${showModule ? "grid-cols-3" : "grid-cols-2"}`}>
+                <div>
+                  <label className={label}>Cycle</label>
+                  <select className={field} value={cycle} required disabled={!ready}
+                    onChange={(e) => { setCycle(e.target.value); setLevel(""); setModule(""); }}>
+                    <option value="">-</option>
+                    {cycles.map((c) => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className={label}>Level</label>
+                  <select className={field} value={level} required disabled={!cycle}
+                    onChange={(e) => { setLevel(e.target.value); setModule(""); }}>
+                    <option value="">-</option>
+                    {levels.map((l) => <option key={l} value={l}>{l}</option>)}
+                  </select>
+                </div>
+                {showModule && (
+                  <div>
+                    <label className={label}>Module</label>
+                    <select className={field} value={module} required={needsModule} disabled={!level}
+                      onChange={(e) => setModule(e.target.value)}>
+                      <option value="">-</option>
+                      {modules.map((m) => <option key={m} value={m}>{m}</option>)}
+                    </select>
+                  </div>
+                )}
+              </div>
+
+              <p className={`${group} pt-2`}>Attachment starts (3 months)</p>
+              <div className="grid grid-cols-2 gap-3">
+                <select className={field} value={month} onChange={(e) => setMonth(e.target.value)} aria-label="Month">
+                  {MONTHS.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
+                </select>
+                <select className={field} value={year} onChange={(e) => setYear(e.target.value)} aria-label="Year">
+                  {[now.getFullYear(), now.getFullYear() + 1].map((y) => <option key={y}>{y}</option>)}
+                </select>
+              </div>
+
+              {/* Honeypot: hidden from people, bots fill it in */}
+              <input className="hidden" tabIndex={-1} autoComplete="off" value={website}
+                onChange={(e) => setWebsite(e.target.value)} aria-hidden="true" />
+              {error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-800">{error}</p>}
+              <button disabled={busy || !level || (needsModule && !module) || !emailsMatch}
+                className="w-full rounded-lg bg-blue-900 px-4 py-3 font-semibold text-white transition hover:bg-blue-800 disabled:opacity-50">
+                {busy ? "Sending..." : "Request my letter"}
+              </button>
+              <PrivacyNotice compact />
+            </form>
+          )}
+          <p className="mt-8 text-center text-xs text-slate-500">
+            <a href="/trainee" className="underline">Trainee login</a> ·{" "}
+            <a href="/admin" className="underline">ILO sign in</a>
+          </p>
+        </div>
+      </main>
     </div>
   );
 }

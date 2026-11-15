@@ -7,6 +7,7 @@ import { ILO_EMAIL, sendMail } from "@/lib/mail";
 import { generateLetter } from "@/lib/pdf";
 import { courseLabel, periodText } from "@/lib/rules";
 import { letterSentSms, sendSms } from "@/lib/sms";
+import { upsertTraineeFromRequest } from "@/lib/trainees";
 import { buildLog } from "@/lib/xlsx";
 
 export async function POST(
@@ -47,7 +48,9 @@ export async function POST(
         `Attachment period: ${start} to ${end}.\n\n` +
         (nita ? `Your NITA form is attached as well.\n` : ``) +
         `Take it to the firm you wish to join. Good luck!\n\n` +
-        `Industrial Liaison Office\nRangwe Technical and Vocational College`,
+        `Once you know your firm, log in at ${process.env.APP_URL || ""}/trainee with this email address ` +
+        `(we send you a one-time code) to add your firm and supervisor details and to see your assessor.\n\n` +
+        `ILO Connect\nIndustrial Liaison Office, Rangwe Technical and Vocational College`,
       attachments: [
         { filename, content: pdf },
         ...(nita ? [{ filename: nita.name, content: nita.content }] : []),
@@ -65,6 +68,9 @@ export async function POST(
     sql: "UPDATE requests SET status = 'approved', decided_at = ? WHERE id = ?",
     args: [now.toISOString(), row.id],
   });
+
+  // The trainee gets an account (log in with a one-time code sent to this email).
+  await upsertTraineeFromRequest(row).catch((e) => console.error("Could not create trainee account", e));
 
   // Copy to the ILO with the up-to-date Excel log.
   try {

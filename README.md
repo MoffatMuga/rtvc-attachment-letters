@@ -96,3 +96,23 @@ Cycle 2 has levels only, no modules. In `lib/rules.json` a cycle 2 level holds `
 ```
 
 To add cycle 2 to every course and section at once, run `node scripts/add-cycle2.mjs --dry-run` to preview, then `node scripts/add-cycle2.mjs` (a backup of your file is kept). It copies the level numbers from cycle 3 and leaves each `units` list empty; fill them in afterwards. An empty list prints the letter without the skills list. Restart the app after editing.
+
+## Trainee accounts, assessors and placements
+
+- When you approve a letter, the trainee automatically gets an account. Trainees approved earlier get one the first time they log in (or when you open Trainees and assessors).
+- Trainees log in at `/trainee` with the email they used for the request. They get a 6-digit one-time code by email (valid 10 minutes, 5 tries, 5 codes per hour). No passwords.
+- On their page trainees see their assessor (or "Not assigned yet"), re-download their letters, and fill in their firm: name, town/county, address, firm phone, department, supervisor name/title/phone/email and start and end dates. They tick a short data notice the first time they save.
+- You manage assessors and assignments at `/admin/trainees`: add assessors, pick one for each trainee (the trainee is emailed), search and filter ("no assessor yet", "no firm details yet"), and download an Excel of all placements.
+- Removing an assessor puts their trainees back to "Not assigned".
+- Your database gets the new tables automatically on first use. Nothing to migrate.
+- The login code email uses the same email settings as the letters (SMTP). Make sure `APP_URL` is your live address so links in emails are right.
+
+## WhatsApp contact button
+
+Set `ILO_WHATSAPP=2547XXXXXXXX` (country code, digits only, no plus) in `.env.local` and on Vercel. Trainees then see a "Contact the ILO on WhatsApp" button on their page. It opens a chat with you with a ready message containing their name and admission number. With the setting empty, the button is hidden.
+
+## Logo and browser tab icon
+
+1. Copy your logo into the project as `public/assets/logo.png` (replace the old one). From WSL: `cp "/mnt/c/Users/USER/Downloads/YOURFILE.png" public/assets/logo.png`
+2. Run `node scripts/make-favicon.mjs` to make the tab icon (`app/icon.png`) from it.
+3. Restart the app. The letter PDF keeps its own built-in logo.

@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "RTVC Attachment Letters",
-  description: "Request your industrial attachment letter - Rangwe Technical and Vocational College",
+  title: "ILO Connect | Rangwe TVC",
+  description: "ILO Connect: your one-stop Industrial Liaison Office - Rangwe Technical and Vocational College",
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };
