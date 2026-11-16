@@ -233,7 +233,139 @@
           }
         }
       }
+    },
+    "Agriculture & Extension": {
+      "cycles": {
+        "3": {
+          "levels": {
+            "4": {
+              "attachment_modules": {
+                "2": {
+                  "units": [
+                    "Produce Horticultural Crops",
+                    "Produce Annual Crops",
+                    "Operate Farm Machinery",
+                    "Rare Non-Ruminant Animals",
+                    "Rare Ruminant Animals"
+                  ]
+                }
+              }
+            },
+          "levels": {
+            "5": {
+              "attachment_modules": {
+                "4": {
+                  "units": [
+                    "Produce Horticultural Crops",
+                    "Produce Annual Crops",
+                    "Operate Farm Machinery",
+                    "Rare Non-Ruminant Animals",
+                    "Rare Ruminant Animals",
+                    "Carry Out Bee Production ",
+                    "Produce Perennial Crops",
+                    "Carry Out Fish Farming",
+                    "Carry out Extension Services",
+                    "Produce Forage Crops"
+                  ]
+                }
+              }
+            },
+            "6": {
+              "attachment_modules": {
+                "4": {
+                  "same_as": [
+                    "5",
+                    "5"
+                  ]
+                },
+                "6": {
+                  "units": [
+                    "Produce Horticultural Crops",
+                    "Produce Annual Crops",
+                    "Operate Farm Machinery",
+                    "Rare Non-Ruminant Animals",
+                    "Rare Ruminant Animals",
+                    "Carry Out Bee Production ",
+                    "Produce Perennial Crops",
+                    "Carry Out Fish Farming",
+                    "Carry out Extension Services",
+                    "Produce Forage Crops",
+                    "Scientific Research"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
     }
-
+  },
+  "Computing & Informatics": {
+      "cycles": {
+        "2": {
+          "levels": {
+            "4": {
+              "units": []
+            },
+            "5": {
+              "units": []
+            },
+            "6": {
+              "units": [
+                "Control ICT Security Threats",
+                "Develop Computer Program",
+                "Install Computer Software",
+                "Manage Database Systems",
+                "Manage Information System",
+                "Mobile Application Development",
+                "Perform Computer Networking",
+                "Perform Computer Repair and Maintenance",
+                "Perform Graphic Design",
+                "Perform ICT System Support",
+                "Perform System Analysis and Design",
+                "Perform Website Design"
+              ]
+            }
+          }
+        },
+        "3": {
+          "levels": {
+            "4": {
+              "attachment_modules": {
+                "2": {
+                  "units": [
+                    
+                  ]
+                }
+              }
+            },
+            "5": {
+              "attachment_modules": {
+                "5": {
+                  "units": [
+                    
+                  ]
+                }
+              }
+            },
+            "6": {
+              "attachment_modules": {
+                "5": {
+                  "same_as": [
+                    "5",
+                    "5"
+                  ]
+                },
+                "8": {
+                  "units": [
+                    
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

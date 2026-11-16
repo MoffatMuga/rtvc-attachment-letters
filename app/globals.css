@@ -15,3 +15,20 @@ body {
   color: var(--foreground);
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
+
+/* Chat button: a gentle wiggle every few seconds, off for people who prefer less motion */
+@keyframes chat-wiggle {
+  0%, 82%, 100% { transform: rotate(0) scale(1); }
+  86% { transform: rotate(-10deg) scale(1.08); }
+  90% { transform: rotate(9deg) scale(1.08); }
+  94% { transform: rotate(-6deg) scale(1.04); }
+}
+@keyframes chat-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+.chat-wiggle { animation: chat-wiggle 5s ease-in-out infinite; }
+.chat-pop { animation: chat-pop 0.2s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .chat-wiggle, .chat-pop, .chat-ring { animation: none !important; }
+}

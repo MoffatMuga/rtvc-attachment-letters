@@ -111,8 +111,21 @@ To add cycle 2 to every course and section at once, run `node scripts/add-cycle2
 
 Set `ILO_WHATSAPP=2547XXXXXXXX` (country code, digits only, no plus) in `.env.local` and on Vercel. Trainees then see a "Contact the ILO on WhatsApp" button on their page. It opens a chat with you with a ready message containing their name and admission number. With the setting empty, the button is hidden.
 
+## Chat button (home page)
+
+A floating green chat button appears on the home page when `ILO_WHATSAPP` is set. The trainee picks a topic, types a message and taps Send; WhatsApp opens with the message ready for your number, and they press send there. (Messages can't be pushed into WhatsApp silently: that needs the paid WhatsApp Business API.) It pulses and wiggles gently, and the animation switches off for people who set "reduce motion".
+
 ## Logo and browser tab icon
 
 1. Copy your logo into the project as `public/assets/logo.png` (replace the old one). From WSL: `cp "/mnt/c/Users/USER/Downloads/YOURFILE.png" public/assets/logo.png`
 2. Run `node scripts/make-favicon.mjs` to make the tab icon (`app/icon.png`) from it.
 3. Restart the app. The letter PDF keeps its own built-in logo.
+
+## Security rules
+
+- One email belongs to one admission number, and one admission number to one email. Gmail dots and `+tags` are treated as the same mailbox (`a.b+x@gmail.com` = `ab@gmail.com`). Rejected requests do not count, so a trainee who typed a wrong email can be rejected and try again.
+- A trainee can't request the same approved cycle/level again (they download it from their account), and only one pending request per admission number is allowed.
+- Temporary-email domains are refused, and the part after the @ must exist (catches `gmial.com`). If DNS can't be checked, nobody is blocked.
+- Limits (stored in the database): 60 requests per hour per network, 6 per hour per email, 60 login-code requests per hour per network, and the ILO sign-in locks for 15 minutes after 10 wrong passwords.
+- Security headers are sent on every page (no framing, no content sniffing, HTTPS only).
+- Old data that already contains duplicates won't stop the app. The database-level unique rule on trainee emails is skipped in that case (it is logged), and the checks above still protect new requests. Fix the old duplicates by hand when convenient.

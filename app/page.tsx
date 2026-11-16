@@ -1,5 +1,6 @@
 "use client";
 
+import ChatFab from "@/components/ChatFab";
 import Choice from "@/components/Choice";
 import PrivacyNotice from "@/components/PrivacyNotice";
 import { useEffect, useMemo, useState } from "react";
@@ -30,6 +31,8 @@ function emailTypo(e: string): string | null {
   const fix = DOMAIN_FIXES[e.slice(at + 1)];
   return fix ? `${e.slice(0, at)}@${fix}` : null;
 }
+
+const az = (a: string, b: string) => a.localeCompare(b, "en", { sensitivity: "base" });
 
 const STEPS = [
   "Receive your attachment letter in your email",
@@ -70,9 +73,9 @@ export default function Home() {
     fetch("/api/rules").then((r) => r.json()).then(setRules);
   }, []);
 
-  const courses = useMemo(() => Object.keys(rules ?? {}), [rules]);
+  const courses = useMemo(() => Object.keys(rules ?? {}).sort(az), [rules]);
   const sections = useMemo(
-    () => Object.keys(rules?.[course] ?? {}).filter((s) => s !== ""),
+    () => Object.keys(rules?.[course] ?? {}).filter((s) => s !== "").sort(az),
     [rules, course],
   );
   const hasSections = sections.length > 0;
@@ -140,7 +143,7 @@ export default function Home() {
       </aside>
 
       <main className="flex-1 lg:overflow-y-auto">
-        <div className="mx-auto w-full max-w-md px-5 py-6 lg:py-12">
+        <div className="mx-auto w-full max-w-md px-5 pb-24 pt-6 lg:py-12">
           {done ? (
             <div className="rounded-xl bg-green-50 p-6 text-center ring-1 ring-green-200">
               <p className="text-lg font-semibold text-green-800">Request received</p>
@@ -257,6 +260,7 @@ export default function Home() {
           </p>
         </div>
       </main>
+      <ChatFab />
     </div>
   );
 }
