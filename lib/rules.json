@@ -142,7 +142,7 @@
         }
       }
     },
-    "Civil Engineering": {
+    "Building Technology": {
       "sections": {
         "Building Technology": {
           "cycles": {
@@ -405,22 +405,8 @@
             },
             "5": {
               "units": []
-            },
-            "6": {
-              "units": [
-                "Control ICT Security Threats",
-                "Develop Computer Program",
-                "Install Computer Software",
-                "Manage Database Systems",
-                "Manage Information System",
-                "Mobile Application Development",
-                "Perform Computer Networking",
-                "Perform Computer Repair and Maintenance",
-                "Perform Graphic Design",
-                "Perform ICT System Support",
-                "Perform System Analysis and Design",
-                "Perform Website Design"
-              ]
+            }
+      
             }
           }
         },
@@ -445,33 +431,25 @@
                     "Perform Computer Repair and Maintenance",
                     "Install Computer Software",
                     "Perform Network Design and Management",
-                    "Manage Computerized Database System"
+                    "Manage Computerized Database System",
+                    "Computer Programming Principles"
                   ]
                 }
               }
             },
             "6": {
               "attachment_modules": {
-                "7": {
-                  "units": [
-                    "Computer Essentials",
-                    "Computer Operations",
-                    "Computer Network Setup",
-                    "Computer Repair and Maintenance",
-                    "Install Computer Software",
-                    "Network Design and Management",
-                    "Manage Computerized Database System",
-                    "Develop Website Application",
-                    "Manage ICT Security Management",
-                    "Develop Desktop Application"
+              "4":{
+                   "same_as": [
+                    "5",
+                    "5"
                   ]
                 }
               }
             }
           }
         }
-      }
-    },
+      },
      "Hospitality": {
       "sections": {
         "Food and Beverage": {
@@ -544,6 +522,6 @@
         }
       }
     }
-    
+  
   }
 }
