@@ -162,10 +162,11 @@
                   "attachment_modules": {
                     "2": {
                       "units": [
-                        "Core unit 1",
-                        "Core unit 2",
-                        "Core unit 3",
-                        "Core unit 4"
+                        "Perform Masonry Works",
+                        "Perform Masonry Works Finishes I",
+                        "Produce Masonry Unit",
+                        "Perform Building Site Preliminary Works I",
+                        "Perform Building Temporary Works"
                       ]
                     }
                   }
@@ -174,16 +175,51 @@
                   "attachment_modules": {
                     "4": {
                       "units": [
-                        "Core unit 1",
-                        "Core unit 2",
-                        "Core unit 3",
-                        "Core unit 4",
-                        "Core unit 5",
-                        "Core unit 6"
+                        "Perform Masonry Works",
+                        "Perform Masonry Works Finishes I",
+                        "Produce Masonry Unit",
+                        "Perform Building Site Preliminary Works I",
+                        "Perform Building Temporary Works",
+                        "Perform Building Substructure Works",
+                        "Install Doors and Windows",
+                        "Execute External Works",
+                        "Perform Building Superstructure Works",
+                        "Carry out building Finishes II"
+                      ]
+                    }
+                  }
+                },
+                "6": {
+                  "attachment_modules": {
+                    "4": {
+                      "same_as": [
+                        "5",
+                        "5"
+                      ]
+                    },
+                    "7":{
+                      "units": [
+                        "Perform Masonry Works",
+                        "Perform Masonry Works Finishes I",
+                        "Produce Masonry Unit",
+                        "Perform Building Site Preliminary Works I",
+                        "Perform Building Temporary Works",
+                        "Perform Building Substructure Works",
+                        "Install Doors and Windows",
+                        "Execute External Works",
+                        "Perform Building Superstructure Works",
+                        "Carry out building Finishes II",
+                        "Perform Building Site Preliminary Works II",
+                        "Perform Building Super Structure Works II",
+                        "Carry Out Roof Construction Works",
+                        "Carry Out Building Finishes III",
+                        "Prepare Building Drawings",
+                        "Manage Building Construction Works"
                       ]
                     }
                   }
                 }
+
               }
             }
           }
@@ -234,6 +270,7 @@
         }
       }
     },
+    
     "Agriculture & Extension": {
       "cycles": {
         "3": {
@@ -291,6 +328,67 @@
                     "Carry out Extension Services",
                     "Produce Forage Crops",
                     "Scientific Research"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "Automotive Engineering": {
+      "cycles": {
+        "3": {
+          "levels": {
+            "4": {
+              "attachment_modules": {
+                "2": {
+                  "units": [
+                    "Vehicle Petrol Engine Maintenance",
+                    "Vehicle Braking System Maintenance",
+                    "Maintain Vehicle Diesel Engine",
+                    "Maintain Vehicle Suspension and steering system"
+                  ]
+                }
+              }
+            },
+          "levels": {
+            "5": {
+              "attachment_modules": {
+                "4": {
+                  "units": [
+                    "Vehicle Petrol Engine Maintenance",
+                    "Vehicle Braking System Maintenance",
+                    "Maintain Vehicle Diesel Engine",
+                    "Maintain Vehicle Suspension and steering system",
+                    "Vehicle Fuel System Mantenance",
+                    "Automotive Electrical System Maintenance",
+                    "Vehicle Transmission System Maintenance"
+                  ]
+                }
+              }
+            },
+            "6": {
+              "attachment_modules": {
+                "4": {
+                  "same_as": [
+                    "5",
+                    "5"
+                  ]
+                },
+                "7":{
+                  "units": [
+                    "Vehicle Petrol Engine Maintenance",
+                    "Vehicle Braking System Maintenance",
+                    "Maintain Vehicle Diesel Engine",
+                    "Maintain Vehicle Suspension and steering system",
+                    "Vehicle Fuel System Mantenance",
+                    "Automotive Electrical System Maintenance",
+                    "Vehicle Transmission System Maintenance",
+                    "Hybrid and Electric vehicle",
+                    "Vehicle Safety and Security System Maintenance",
+                    "Vehicle Comfort System Maintenance"
                   ]
                 }
               }
@@ -376,5 +474,6 @@
         }
       }
     }
+    
   }
 }
