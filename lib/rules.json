@@ -295,7 +295,6 @@
                 }
               }
             },
-          "levels": {
             "5": {
               "attachment_modules": {
                 "4": {
@@ -339,7 +338,6 @@
                 }
               }
             }
-          }
         }
       }
     }
@@ -467,6 +465,78 @@
                     "Manage ICT Security Management",
                     "Develop Desktop Application"
                   ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+     "Hospitality": {
+      "sections": {
+        "Food and Beverage": {
+          "cycles": {
+            "3": {
+              "levels": {
+                "4": {
+                  "attachment_modules": {
+                    "2": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4"
+                      ]
+                    }
+                  }
+                },
+                "5": {
+                  "attachment_modules": {
+                    "4": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4",
+                        "Core unit 5",
+                        "Core unit 6"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Cosmetology": {
+          "cycles": {
+            "3": {
+              "levels": {
+                "4": {
+                  "attachment_modules": {
+                    "2": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4"
+                      ]
+                    }
+                  }
+                },
+                "5": {
+                  "attachment_modules": {
+                    "4": {
+                      "units": [
+                        "Core unit 1",
+                        "Core unit 2",
+                        "Core unit 3",
+                        "Core unit 4",
+                        "Core unit 5",
+                        "Core unit 6"
+                      ]
+                    }
+                  }
                 }
               }
             }
