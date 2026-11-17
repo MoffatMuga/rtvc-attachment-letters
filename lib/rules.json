@@ -242,10 +242,13 @@
                   "attachment_modules": {
                     "2": {
                       "units": [
-                        "Core unit 1",
-                        "Core unit 2",
-                        "Core unit 3",
-                        "Core unit 4"
+                        "Install water supply system I",
+                        "Install sanitary appliances I",
+                        "Install drainage system I",
+                        "Install water supply system II",
+                        "Install rainwater harvesting system I",
+                        "Install drainage system II",
+                        "Install sanitary appliances II"
                       ]
                     }
                   }
@@ -254,12 +257,16 @@
                   "attachment_modules": {
                     "4": {
                       "units": [
-                        "Core unit 1",
-                        "Core unit 2",
-                        "Core unit 3",
-                        "Core unit 4",
-                        "Core unit 5",
-                        "Core unit 6"
+                        "Install water supply system I",
+                        "Install sanitary appliances I",
+                        "Install drainage system I",
+                        "Install water supply system II",
+                        "Install rainwater harvesting system I",
+                        "Install drainage system II",
+                        "Install sanitary appliances II",
+                        "Install Water Supply System III",
+                        "Install water storage System",
+                        "Install fire control Systems"
                       ]
                     }
                   }
@@ -338,66 +345,59 @@
     }
   },
   "Automotive Engineering": {
-      "cycles": {
-        "3": {
-          "levels": {
+  "cycles": {
+    "3": {
+      "levels": {
+        "4": {
+          "attachment_modules": {
+            "2": {
+              "units": [
+                "Vehicle Petrol Engine Maintenance",
+                "Vehicle Braking System Maintenance",
+                "Maintain Vehicle Diesel Engine",
+                "Maintain Vehicle Suspension and steering system"
+              ]
+            }
+          }
+        },
+        "5": {
+          "attachment_modules": {
             "4": {
-              "attachment_modules": {
-                "2": {
-                  "units": [
-                    "Vehicle Petrol Engine Maintenance",
-                    "Vehicle Braking System Maintenance",
-                    "Maintain Vehicle Diesel Engine",
-                    "Maintain Vehicle Suspension and steering system"
-                  ]
-                }
-              }
-            },
-          "levels": {
-            "5": {
-              "attachment_modules": {
-                "4": {
-                  "units": [
-                    "Vehicle Petrol Engine Maintenance",
-                    "Vehicle Braking System Maintenance",
-                    "Maintain Vehicle Diesel Engine",
-                    "Maintain Vehicle Suspension and steering system",
-                    "Vehicle Fuel System Mantenance",
-                    "Automotive Electrical System Maintenance",
-                    "Vehicle Transmission System Maintenance"
-                  ]
-                }
-              }
-            },
-            "6": {
-              "attachment_modules": {
-                "4": {
-                  "same_as": [
-                    "5",
-                    "5"
-                  ]
-                },
-                "7":{
-                  "units": [
-                    "Vehicle Petrol Engine Maintenance",
-                    "Vehicle Braking System Maintenance",
-                    "Maintain Vehicle Diesel Engine",
-                    "Maintain Vehicle Suspension and steering system",
-                    "Vehicle Fuel System Mantenance",
-                    "Automotive Electrical System Maintenance",
-                    "Vehicle Transmission System Maintenance",
-                    "Hybrid and Electric vehicle",
-                    "Vehicle Safety and Security System Maintenance",
-                    "Vehicle Comfort System Maintenance"
-                  ]
-                }
-              }
+              "units": [
+                "Vehicle Petrol Engine Maintenance",
+                "Vehicle Braking System Maintenance",
+                "Maintain Vehicle Diesel Engine",
+                "Maintain Vehicle Suspension and steering system",
+                "Vehicle Fuel System Maintenance",
+                "Automotive Electrical System Maintenance",
+                "Vehicle Transmission System Maintenance"
+              ]
+            }
+          }
+        },
+        "6": {
+          "attachment_modules": {
+            "4": { "same_as": ["5", "4"] },
+            "7": {
+              "units": [
+                "Vehicle Petrol Engine Maintenance",
+                "Vehicle Braking System Maintenance",
+                "Maintain Vehicle Diesel Engine",
+                "Maintain Vehicle Suspension and steering system",
+                "Vehicle Fuel System Maintenance",
+                "Automotive Electrical System Maintenance",
+                "Vehicle Transmission System Maintenance",
+                "Hybrid and Electric Vehicle",
+                "Vehicle Safety and Security System Maintenance",
+                "Vehicle Comfort System Maintenance"
+              ]
             }
           }
         }
       }
     }
-  },
+  }
+},
   "Computing & Informatics": {
       "cycles": {
         "2": {
