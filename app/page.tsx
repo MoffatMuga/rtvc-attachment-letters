@@ -2,6 +2,7 @@
 
 import ChatFab from "@/components/ChatFab";
 import Choice from "@/components/Choice";
+import Picker from "@/components/Picker";
 import PrivacyNotice from "@/components/PrivacyNotice";
 import { useEffect, useMemo, useState } from "react";
 
@@ -62,6 +63,10 @@ export default function Home() {
   const [level, setLevel] = useState("");
   const [module, setModule] = useState("");
   const now = new Date();
+  const startOptions = Array.from({ length: 12 }, (_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+    return { value: `${d.getFullYear()}-${d.getMonth() + 1}`, label: `${MONTHS[d.getMonth()]} ${d.getFullYear()}` };
+  });
   const [month, setMonth] = useState(String(((now.getMonth() + 1) % 12) + 1));
   const [year, setYear] = useState(String(now.getFullYear() + (now.getMonth() === 11 ? 1 : 0)));
   const [website, setWebsite] = useState(""); // honeypot
@@ -198,14 +203,14 @@ export default function Home() {
               <p className={`${group} pt-2`}>Your course</p>
               <div>
                 <label className={label}>Course</label>
-                <Choice ariaLabel="Course" cols="grid-cols-1" value={course}
+                <Picker title="Choose your course" placeholder="Select your course" value={course}
                   options={courses.map((c) => ({ value: c, label: c }))}
                   onChange={(v) => { setCourse(v); setSection(""); setCycle(""); setLevel(""); setModule(""); }} />
               </div>
               {hasSections && (
                 <div>
                   <label className={label}>Section</label>
-                  <Choice ariaLabel="Section" cols="grid-cols-1" value={section}
+                  <Picker title="Choose your section" placeholder="Select your section" value={section}
                     options={sections.map((x) => ({ value: x, label: x }))}
                     onChange={(v) => { setSection(v); setCycle(""); setLevel(""); setModule(""); }} />
                 </div>
@@ -235,13 +240,13 @@ export default function Home() {
                 </div>
               )}
 
-              <p className={`${group} pt-2`}>Attachment starts (3 months)</p>
-              <Choice ariaLabel="Month" cols="grid-cols-4" value={month}
-                options={MONTHS.map((m, i) => ({ value: String(i + 1), label: m.slice(0, 3) }))}
-                onChange={setMonth} />
-              <Choice ariaLabel="Year" cols="grid-cols-2" value={year}
-                options={[now.getFullYear(), now.getFullYear() + 1].map((y) => ({ value: String(y), label: String(y) }))}
-                onChange={setYear} />
+              <p className={`${group} pt-2`}>Attachment</p>
+              <div>
+                <label className={label}>Starts in (runs for 3 months)</label>
+                <Picker title="Attachment starts in" placeholder="Select month" value={`${year}-${month}`}
+                  options={startOptions}
+                  onChange={(v) => { const [y, m] = v.split("-"); setYear(y); setMonth(m); }} />
+              </div>
 
               {/* Honeypot: hidden from people, bots fill it in */}
               <input className="hidden" tabIndex={-1} autoComplete="off" value={website}

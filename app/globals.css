@@ -32,3 +32,10 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .chat-wiggle, .chat-pop, .chat-ring { animation: none !important; }
 }
+
+@keyframes sheet-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+.sheet-up { animation: sheet-up 0.22s ease-out both; }
+@media (prefers-reduced-motion: reduce) { .sheet-up { animation: none !important; } }
