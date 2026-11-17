@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { db } from "@/lib/db";
+import { waNumber } from "@/lib/whatsapp";
 import { courseLabel, normalizePhone, periodText } from "@/lib/rules";
 import { currentTrainee } from "@/lib/trainee-auth";
 import { getAssessor, PROFILE_FIELDS } from "@/lib/trainees";
@@ -27,9 +28,8 @@ export async function GET(req: NextRequest) {
   });
   const { assessor_id: _a, ...profile } = t;
   void _a;
-  const wa = (process.env.ILO_WHATSAPP || "").replace(/\D/g, "");
   return Response.json({
-    whatsapp: wa.length >= 9 ? wa : "",
+    whatsapp: waNumber(process.env.ILO_WHATSAPP),
     trainee: profile,
     assessor: assessor && { name: assessor.name, phone: assessor.phone, email: assessor.email, department: assessor.department },
     letters,
