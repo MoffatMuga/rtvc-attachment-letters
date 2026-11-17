@@ -86,17 +86,27 @@ export default function ChatFab() {
       {!open && teaser && (
         <button onClick={() => { dismissTeaser(); setOpen(true); }}
           className="chat-pop rounded-2xl rounded-br-sm bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-lg ring-1 ring-slate-200">
-          Need help? Chat with the ILO 👋
+          Hi! I'm the ILO bot. Need help? 👋
         </button>
       )}
 
       <button onClick={() => { dismissTeaser(); setOpen((o) => !o); }} aria-label={open ? "Close chat" : "Chat with the ILO on WhatsApp"}
         className="relative grid h-14 w-14 place-items-center rounded-full bg-green-600 text-white shadow-xl hover:bg-green-700">
         {!open && <span className="chat-ring absolute inset-0 animate-ping rounded-full bg-green-500 opacity-40" aria-hidden="true" />}
-        <svg viewBox="0 0 24 24" className={`relative h-7 w-7 fill-current ${open ? "" : "chat-wiggle"}`} aria-hidden="true">
+        <svg viewBox="0 0 24 24" className={`relative h-8 w-8 fill-current ${open ? "" : "chat-wiggle"}`} aria-hidden="true">
           {open
             ? <path d="M18.3 5.7a1 1 0 0 0-1.4 0L12 10.6 7.1 5.7a1 1 0 0 0-1.4 1.4L10.6 12l-4.9 4.9a1 1 0 1 0 1.4 1.4L12 13.4l4.9 4.9a1 1 0 0 0 1.4-1.4L13.4 12l4.9-4.9a1 1 0 0 0 0-1.4z" />
-            : <path d="M12 2C6.5 2 2 6 2 11c0 2.4 1 4.5 2.7 6.1L4 22l4.6-2.2c1 .3 2.2.4 3.4.4 5.5 0 10-4 10-9S17.5 2 12 2zm-4 10.5a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6zm4 0a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6zm4 0a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6z" />}
+            : <g>
+                {/* little robot: antenna, head, ears, eyes, smile */}
+                <circle cx="12" cy="3.2" r="1.5" />
+                <rect x="11.2" y="4" width="1.6" height="3" rx="0.8" />
+                <rect x="2" y="11" width="2.2" height="5" rx="1.1" />
+                <rect x="19.8" y="11" width="2.2" height="5" rx="1.1" />
+                <rect x="4.5" y="6.5" width="15" height="13" rx="4.5" />
+                <circle cx="9.2" cy="12.2" r="1.7" fill="#16a34a" />
+                <circle cx="14.8" cy="12.2" r="1.7" fill="#16a34a" />
+                <path d="M9 16.2c.8 1 1.8 1.4 3 1.4s2.2-.4 3-1.4" fill="none" stroke="#16a34a" strokeWidth="1.5" strokeLinecap="round" />
+              </g>}
         </svg>
       </button>
     </div>
