@@ -341,24 +341,33 @@
             },
             "5": {
               "attachment_modules": {
-                "5": {
+                "4": {
                   "units": [
-                    
+                    "Perform Computer Essentials",
+                    "Perform Computer Operations",
+                    "Perform Computer Network Setup",
+                    "Perform Computer Repair and Maintenance",
+                    "Install Computer Software",
+                    "Perform Network Design and Management",
+                    "Manage Computerized Database System"
                   ]
                 }
               }
             },
             "6": {
               "attachment_modules": {
-                "5": {
-                  "same_as": [
-                    "5",
-                    "5"
-                  ]
-                },
-                "8": {
+                "7": {
                   "units": [
-                    
+                    "Computer Essentials",
+                    "Computer Operations",
+                    "Computer Network Setup",
+                    "Computer Repair and Maintenance",
+                    "Install Computer Software",
+                    "Network Design and Management",
+                    "Manage Computerized Database System",
+                    "Develop Website Application",
+                    "Manage ICT Security Management",
+                    "Develop Desktop Application"
                   ]
                 }
               }
