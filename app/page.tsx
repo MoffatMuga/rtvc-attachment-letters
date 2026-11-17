@@ -1,6 +1,7 @@
 "use client";
 
 import ChatFab from "@/components/ChatFab";
+import FeedbackCard from "@/components/FeedbackCard";
 import Choice from "@/components/Choice";
 import Picker from "@/components/Picker";
 import PrivacyNotice from "@/components/PrivacyNotice";
@@ -150,12 +151,18 @@ export default function Home() {
       <main className="flex-1 lg:overflow-y-auto">
         <div className="mx-auto w-full max-w-md px-5 pb-24 pt-6 lg:py-12">
           {done ? (
-            <div className="rounded-xl bg-green-50 p-6 text-center ring-1 ring-green-200">
-              <p className="text-lg font-semibold text-green-800">Request received</p>
-              <p className="mt-2 text-sm text-green-900">
-                Your letter will be sent to <b>{emailClean}</b> after approval. Check your spam folder too.
-              </p>
-            </div>
+            <>
+              <div className="rounded-xl bg-green-50 p-6 text-center ring-1 ring-green-200">
+                <p className="text-lg font-semibold text-green-800">Request received</p>
+                <p className="mt-2 text-sm text-green-900">
+                  Your letter will be sent to <b>{emailClean}</b> after approval. Check your spam folder too.
+                </p>
+                <p className="mt-2 text-sm text-green-900">
+                  That email will also carry a link to create your ILO Connect account.
+                </p>
+              </div>
+              <FeedbackCard />
+            </>
           ) : (
             <form onSubmit={submit} className="space-y-4">
               <div className="lg:hidden">

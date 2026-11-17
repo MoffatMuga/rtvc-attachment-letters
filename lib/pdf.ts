@@ -164,7 +164,7 @@ export async function generateLetter(
   });
 
   y -= 8;
-  const courseLine = `${courseLabel(data.course, data.section ?? "")} Level ${data.level}`;
+  const courseLine = `${courseLabel(data.course, data.section ?? "", data.cycle, data.level)} Level ${data.level}`;
   y = drawRich(page, reg, bold, [
     { text: "The above named is a trainee at ", bold: false },
     { text: "Rangwe Technical and Vocational College", bold: true },

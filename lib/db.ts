@@ -1,5 +1,6 @@
 import { createClient, type Client } from "@libsql/client";
 import { mkdirSync } from "fs";
+import { emailKey } from "./guard-email";
 import path from "path";
 
 let client: Client | null = null;
@@ -90,6 +91,16 @@ export function ensureDb(): Promise<void> {
           created_at INTEGER NOT NULL
         )`,
       ]);
+      await c.batch([
+        `CREATE TABLE IF NOT EXISTS hits (key TEXT NOT NULL, ts INTEGER NOT NULL)`,
+        `CREATE TABLE IF NOT EXISTS feedback (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          created_at TEXT NOT NULL,
+          rating INTEGER NOT NULL,
+          comment TEXT NOT NULL DEFAULT ''
+        )`,
+        `CREATE INDEX IF NOT EXISTS hits_key_idx ON hits (key, ts)`,
+      ]);
       // Upgrade older databases that were created before the phone column.
       const cols = await c.execute("PRAGMA table_info(requests)");
       if (!cols.rows.some((r) => String(r.name) === "phone")) {
@@ -97,6 +108,29 @@ export function ensureDb(): Promise<void> {
       }
       if (!cols.rows.some((r) => String(r.name) === "section")) {
         await c.execute("ALTER TABLE requests ADD COLUMN section TEXT");
+      }
+      // One email <-> one admission number: a normalised email key on both tables.
+      for (const table of ["requests", "trainees"]) {
+        const tc = await c.execute(`PRAGMA table_info(${table})`);
+        if (!tc.rows.some((r) => String(r.name) === "email_key")) {
+          await c.execute(`ALTER TABLE ${table} ADD COLUMN email_key TEXT NOT NULL DEFAULT ''`);
+        }
+        const missing = await c.execute(`SELECT id, email FROM ${table} WHERE email_key = ''`);
+        for (const r of missing.rows) {
+          await c.execute({
+            sql: `UPDATE ${table} SET email_key = ? WHERE id = ?`,
+            args: [emailKey(String(r.email)), r.id as number],
+          });
+        }
+      }
+      // Database-level guards. Wrapped so old duplicate data can never stop the app starting.
+      for (const sql of [
+        `CREATE INDEX IF NOT EXISTS requests_adm_idx ON requests (adm_no)`,
+        `CREATE INDEX IF NOT EXISTS requests_emailkey_idx ON requests (email_key)`,
+        `CREATE UNIQUE INDEX IF NOT EXISTS one_pending_per_adm ON requests (adm_no) WHERE status = 'pending'`,
+        `CREATE UNIQUE INDEX IF NOT EXISTS trainees_emailkey_uq ON trainees (email_key)`,
+      ]) {
+        await c.execute(sql).catch((e) => console.error("Could not create index (existing duplicates?):", sql, e.message));
       }
     })();
   }

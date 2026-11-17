@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     return {
       id: r.id,
       ref: r.ref,
-      course: courseLabel(r.course, r.section),
+      course: courseLabel(r.course, r.section, r.cycle, r.level),
       level: r.level,
       period: `${s} to ${e}`,
       date: (r.decided_at ?? "").slice(0, 10),

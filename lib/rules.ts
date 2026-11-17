@@ -8,6 +8,8 @@ type ModuleEntry = { units?: string[]; same_as?: [string, string] };
  * directly with no modules at all (cycle 2 style).
  */
 type Level = {
+  /** Optional text in brackets after the course name for THIS level, e.g. "Masonry". Use "" for none. */
+  option?: string;
   attachment_modules?: Record<string, ModuleEntry>;
   units?: string[];
 };
@@ -41,12 +43,29 @@ function resolve(course: string, section: string): Cycles {
   return c.cycles ?? {};
 }
 
-/** Course name as printed on the letter and shown to the ILO. */
-export function courseLabel(course: string, section = ""): string {
+/**
+ * Course name as printed on the letter and shown to the ILO.
+ * Bracket text, in order of priority: the level's own "option" (e.g. Building Technology level 4 -> Masonry),
+ * else the section name (unless it is the same as the course name), else the course's "option".
+ */
+export function courseLabel(course: string, section = "", cycle = "", level = ""): string {
   const c = rules.courses[course];
-  if (c?.sections && section) return `${course} (${section})`;
-  if (c?.option) return `${course} (${c.option})`;
-  return course;
+  if (!c) return course;
+  let tag: string | undefined;
+  if (cycle && level) {
+    try {
+      const lv = resolve(course, section)[cycle]?.levels[level];
+      if (lv && lv.option !== undefined) tag = lv.option.trim();
+    } catch { /* unknown section: fall through */ }
+  }
+  if (tag === undefined) {
+    if (c.sections) {
+      if (section && section.trim().toLowerCase() !== course.trim().toLowerCase()) tag = section;
+    } else if (c.option) {
+      tag = c.option;
+    }
+  }
+  return tag ? `${course} (${tag})` : course;
 }
 
 /**

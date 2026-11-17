@@ -34,7 +34,7 @@ export async function buildLog(): Promise<Buffer> {
       date: (r.decided_at ?? "").slice(0, 10),
       name: r.name,
       adm: r.adm_no,
-      course: courseLabel(r.course, r.section),
+      course: courseLabel(r.course, r.section, r.cycle, r.level),
       level: Number(r.level),
       module: r.module ? Number(r.module) : "",
       period: `${s} to ${e}`,

@@ -96,6 +96,7 @@ export default function Admin() {
       </div>
       <div className="mb-4 flex flex-wrap gap-2 text-sm">
         <a href="/api/admin/log" className="rounded-lg bg-white px-3 py-2 ring-1 ring-slate-200">Download Excel log</a>
+        <a href="/admin/feedback" className="rounded-lg bg-white px-3 py-2 ring-1 ring-slate-200">Feedback</a>
         <a href="/admin/trainees" className="rounded-lg bg-white px-3 py-2 ring-1 ring-slate-200">Trainees &amp; assessors</a>
         <a href="/admin/settings" className="rounded-lg bg-white px-3 py-2 ring-1 ring-slate-200">Stamp &amp; signature</a>
         <span className="px-1 py-2 text-slate-500">Next ref: {nextRef}</span>

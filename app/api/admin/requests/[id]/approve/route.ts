@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { requireAdmin } from "@/lib/auth";
+import { identityConflict } from "@/lib/guard";
 import { allocateRef, db, getRequest } from "@/lib/db";
 import { loadAssets } from "@/lib/letter-assets";
 import { loadNita } from "@/lib/nita";
@@ -23,6 +24,14 @@ export async function POST(
     return Response.json({ error: `Request is already ${row.status}.` }, { status: 409 });
   }
 
+  const clash = await identityConflict(row.adm_no, row.email);
+  if (clash) {
+    return Response.json(
+      { error: "This admission number or email clashes with another trainee's account. Reject this request and ask the trainee to use their own email." },
+      { status: 409 },
+    );
+  }
+
   // Reuse the reference if an earlier attempt allocated one but email failed.
   let ref = row.ref;
   if (!ref) {
@@ -39,6 +48,9 @@ export async function POST(
     return null;
   });
 
+  const origin = (process.env.APP_URL || new URL(req.url).origin).replace(/\/+$/, "");
+  const loginUrl = `${origin}/trainee`;
+
   try {
     await sendMail({
       to: row.email,
@@ -48,8 +60,10 @@ export async function POST(
         `Attachment period: ${start} to ${end}.\n\n` +
         (nita ? `Your NITA form is attached as well.\n` : ``) +
         `Take it to the firm you wish to join. Good luck!\n\n` +
-        `Once you know your firm, log in at ${process.env.APP_URL || ""}/trainee with this email address ` +
-        `(we send you a one-time code) to add your firm and supervisor details and to see your assessor.\n\n` +
+        `CREATE YOUR ILO CONNECT ACCOUNT\n` +
+        `Your account is ready. Open this link and sign in with this email address (${row.email}); ` +
+        `we send you a one-time code, no password needed:\n${loginUrl}\n` +
+        `There you can add your firm and supervisor details, see your assessor, and download your letter again.\n\n` +
         `ILO Connect\nIndustrial Liaison Office, Rangwe Technical and Vocational College`,
       attachments: [
         { filename, content: pdf },
@@ -78,7 +92,7 @@ export async function POST(
     await sendMail({
       to: ILO_EMAIL(),
       subject: `Approved: ${row.name} (${ref})`,
-      text: `Letter sent to ${row.email} (phone ${row.phone}).\n${row.name}, ${row.adm_no}, ${courseLabel(row.course, row.section)} Level ${row.level}.\nThe updated log is attached.`,
+      text: `Letter sent to ${row.email} (phone ${row.phone}).\n${row.name}, ${row.adm_no}, ${courseLabel(row.course, row.section, row.cycle, row.level)} Level ${row.level}.\nThe updated log is attached.`,
       attachments: [
         { filename, content: pdf },
         { filename: "Attachment letters log.xlsx", content: log },

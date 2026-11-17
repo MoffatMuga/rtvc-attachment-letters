@@ -132,3 +132,15 @@ A floating green chat button appears on the home page when `ILO_WHATSAPP` is set
 - Limits (stored in the database): 60 requests per hour per network, 6 per hour per email, 60 login-code requests per hour per network, and the ILO sign-in locks for 15 minutes after 10 wrong passwords.
 - Security headers are sent on every page (no framing, no content sniffing, HTTPS only).
 - Old data that already contains duplicates won't stop the app. The database-level unique rule on trainee emails is skipped in that case (it is logged), and the checks above still protect new requests. Fix the old duplicates by hand when convenient.
+
+## Text in brackets on the letter
+
+The letter prints the course name, then optional bracket text, e.g. "Building Technology (Masonry) Level 4". The bracket text comes from, in this order:
+
+1. The level's own `"option"`, e.g. `"4": { "option": "Masonry", "attachment_modules": { ... } }`. Use `"option": ""` to force no brackets for that level.
+2. Otherwise the section name, unless it is the same as the course name (so a section called "Building Technology" inside the course "Building Technology" prints no brackets).
+3. Otherwise the course's `"option"` (e.g. "power option").
+
+## Feedback
+
+After a trainee submits a request they can rate the experience (1 to 5 stars, optional comment). Read the results in the ILO area under **Feedback**.
