@@ -1,9 +1,13 @@
 import type { NextRequest } from "next/server";
 import { db } from "@/lib/db";
+import { clientIp, tooMany } from "@/lib/guard";
 import { checkLoginCode, makeTraineeToken, TRAINEE_COOKIE, traineeCookieOptions } from "@/lib/trainee-auth";
 import { getTraineeByEmail } from "@/lib/trainees";
 
 export async function POST(req: NextRequest) {
+  if (await tooMany(`login:ip:${clientIp(req)}`, 100, 900)) {
+    return Response.json({ error: "Too many attempts. Try again later." }, { status: 429 });
+  }
   const body = await req.json().catch(() => ({}));
   const email = String(body?.email ?? "").trim().toLowerCase();
   const code = String(body?.code ?? "").trim();

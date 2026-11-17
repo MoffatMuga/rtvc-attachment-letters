@@ -1,4 +1,5 @@
 import { db, ensureDb } from "./db";
+import { emailKey } from "./guard-email";
 
 export type Trainee = {
   id: number;
@@ -89,9 +90,9 @@ export async function upsertTraineeFromRequest(r: {
 }) {
   await ensureDb();
   await db().execute({
-    sql: `INSERT INTO trainees (created_at, adm_no, name, email, phone) VALUES (?,?,?,?,?)
-          ON CONFLICT(adm_no) DO UPDATE SET email = excluded.email, name = excluded.name`,
-    args: [new Date().toISOString(), r.adm_no, r.name, r.email, r.phone],
+    sql: `INSERT INTO trainees (created_at, adm_no, name, email, email_key, phone) VALUES (?,?,?,?,?,?)
+          ON CONFLICT(adm_no) DO UPDATE SET email = excluded.email, email_key = excluded.email_key, name = excluded.name`,
+    args: [new Date().toISOString(), r.adm_no, r.name, r.email, emailKey(r.email), r.phone],
   });
 }
 
