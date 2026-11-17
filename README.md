@@ -113,6 +113,9 @@ Set `ILO_WHATSAPP=2547XXXXXXXX` (country code, digits only, no plus) in `.env.lo
 
 ## Chat button (home page)
 
+Set your WhatsApp number in **ILO sign-in, then Settings, then WhatsApp number**. No redeploy needed. (The `ILO_WHATSAPP` environment setting still works as a fallback.)
+
+
 A floating green chat button appears on the home page when `ILO_WHATSAPP` is set. The trainee picks a topic, types a message and taps Send; WhatsApp opens with the message ready for your number, and they press send there. (Messages can't be pushed into WhatsApp silently: that needs the paid WhatsApp Business API.) It pulses and wiggles gently, and the animation switches off for people who set "reduce motion".
 
 ## Logo and browser tab icon

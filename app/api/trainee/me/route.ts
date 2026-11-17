@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { db } from "@/lib/db";
-import { waNumber } from "@/lib/whatsapp";
+import { getWhatsapp } from "@/lib/whatsapp";
 import { courseLabel, normalizePhone, periodText } from "@/lib/rules";
 import { currentTrainee } from "@/lib/trainee-auth";
 import { getAssessor, PROFILE_FIELDS } from "@/lib/trainees";
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
   const { assessor_id: _a, ...profile } = t;
   void _a;
   return Response.json({
-    whatsapp: waNumber(process.env.ILO_WHATSAPP),
+    whatsapp: await getWhatsapp(),
     trainee: profile,
     assessor: assessor && { name: assessor.name, phone: assessor.phone, email: assessor.email, department: assessor.department },
     letters,

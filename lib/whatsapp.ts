@@ -6,3 +6,16 @@ export function waNumber(raw: string | undefined): string {
   if (/^[17]\d{8}$/.test(d)) d = "254" + d;           // missing the leading 0
   return d.length >= 9 ? d : "";
 }
+
+import { getSetting } from "./db";
+
+/** The number set in the ILO settings page wins; the ILO_WHATSAPP environment setting is the fallback. */
+export async function getWhatsapp(): Promise<string> {
+  try {
+    const saved = await getSetting("whatsapp");
+    if (saved !== null) return waNumber(saved);
+  } catch (e) {
+    console.error("Could not read WhatsApp setting", e);
+  }
+  return waNumber(process.env.ILO_WHATSAPP);
+}

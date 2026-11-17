@@ -31,12 +31,17 @@ export default function Settings() {
   const [pl, setPl] = useState<Placement | null>(null);
   const [nita, setNita] = useState<{ name: string; kb: number } | null>(null);
   const [msg, setMsg] = useState("");
+  const [wa, setWa] = useState("");
+  const [waActive, setWaActive] = useState("");
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async () => {
     const res = await fetch("/api/admin/settings");
     if (res.status === 401) { window.location.href = "/admin"; return; }
     const d = await res.json();
+    fetch("/api/admin/settings/whatsapp").then((r) => r.json()).then((w) => {
+      setWa(w.saved || w.active || ""); setWaActive(w.active || "");
+    }).catch(() => {});
     setStamp(d.stamp); setSignature(d.signature); setPl(d.placement); setNita(d.nita ?? null);
   }, []);
   useEffect(() => { load(); }, [load]);
@@ -132,6 +137,16 @@ export default function Settings() {
     setMsg(res.ok ? "Placement saved." : "Could not save.");
   }
 
+  async function saveWa() {
+    setMsg("");
+    const res = await fetch("/api/admin/settings/whatsapp", {
+      method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ number: wa }),
+    });
+    const d = await res.json().catch(() => ({}));
+    if (res.ok) { setWaActive(d.active || ""); setMsg(d.active ? "WhatsApp number saved. The chat button is now on." : "WhatsApp number cleared. The chat button is hidden."); }
+    else setMsg(d.error ?? "Could not save.");
+  }
+
   if (!pl) return <main className="p-8 text-center text-slate-500">Loading...</main>;
   const set = (k: keyof Placement) => (v: number) => setPl({ ...pl, [k]: v });
   const today = new Date();
@@ -158,6 +173,20 @@ export default function Settings() {
             )}
           </div>
         ))}
+      </div>
+      <div className="mt-3 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+        <p className="mb-1 font-semibold">WhatsApp number</p>
+        <p className="mb-2 text-sm text-slate-600">
+          Trainees reach you through the chat button on the home page and their account. Leave empty to hide it.
+        </p>
+        <div className="flex gap-2">
+          <input value={wa} onChange={(e) => setWa(e.target.value)} inputMode="tel" placeholder="0712 345 678"
+            className="min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2 text-base" />
+          <button onClick={saveWa} className="rounded-lg bg-blue-900 px-4 py-2 font-semibold text-white">Save</button>
+        </div>
+        <p className="mt-2 text-sm text-slate-500">
+          {waActive ? <>Chat button is <b className="text-green-700">ON</b> (sending to +{waActive}).</> : <>Chat button is <b>OFF</b> (no number set).</>}
+        </p>
       </div>
       <div className="mt-3 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
         <p className="mb-1 font-semibold">NITA form (PDF)</p>
