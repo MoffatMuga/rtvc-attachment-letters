@@ -492,10 +492,12 @@
                   "attachment_modules": {
                     "2": {
                       "units": [
-                        "Core unit 1",
-                        "Core unit 2",
-                        "Core unit 3",
-                        "Core unit 4"
+                        "Plaiting and Braiding",
+                        "Barbering service",
+                        "Manicure and pedicure service",
+                        "Make up service",
+                        "Hair additions service",
+                        "Hair styling service"
                       ]
                     }
                   }
@@ -504,12 +506,17 @@
                   "attachment_modules": {
                     "4": {
                       "units": [
-                        "Core unit 1",
-                        "Core unit 2",
-                        "Core unit 3",
-                        "Core unit 4",
-                        "Core unit 5",
-                        "Core unit 6"
+                        "Plaiting and Braiding",
+                        "Barbering service",
+                        "Manicure and pedicure service",
+                        "Make up service",
+                        "Hair additions service",
+                        "Hair styling service",
+                        "Nail care service",
+                        "Dread locking services",
+                        "Hair removal service",
+                        "Hair cutting services",
+                        "Facial treatment services"
                       ]
                     }
                   }
