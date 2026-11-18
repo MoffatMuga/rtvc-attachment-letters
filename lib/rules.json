@@ -396,72 +396,58 @@
     }
   }
 },
-  "Information & Communication Technology": {
-      "cycles": {
-        "2": {
-          "levels": {
+"Information & Communication Technology": {
+  "cycles": {
+    "2": {
+      "levels": {
+        "4": { "units": [] },
+        "5": { "units": [] }
+      }
+    },
+    "3": {
+      "levels": {
+        "4": {
+          "attachment_modules": {
+            "2": { "units": [] }
+          }
+        },
+        "5": {
+          "attachment_modules": {
             "4": {
-              "units": []
-            },
-            "5": {
-              "units": []
-            }
-      
+              "units": [
+                "Perform Computer Essentials",
+                "Perform Computer Operations",
+                "Perform Computer Network Setup",
+                "Perform Computer Repair and Maintenance",
+                "Install Computer Software",
+                "Perform Network Design and Management",
+                "Manage Computerized Database System",
+                "Computer Programming Principles"
+              ]
             }
           }
         },
-        "3": {
-          "levels": {
-            "4": {
-              "attachment_modules": {
-                "2": {
-                  "units": [
-                    
-                  ]
-                }
-              }
-            },
-            "5": {
-              "attachment_modules": {
-                "4": {
-                  "units": [
-                    "Perform Computer Essentials",
-                    "Perform Computer Operations",
-                    "Perform Computer Network Setup",
-                    "Perform Computer Repair and Maintenance",
-                    "Install Computer Software",
-                    "Perform Network Design and Management",
-                    "Manage Computerized Database System",
-                    "Computer Programming Principles"
-                  ]
-                }
-              }
-            },
-            "6": {
-              "attachment_modules": {
-              "4":{
-                   "same_as": [
-                    "5",
-                    "5"
-                  ]
-                },
-              "7":{
-                 "units": [
-                    "Perform Computer Essentials",
-                    "Perform Computer Operations",
-                    "Perform Computer Network Setup",
-                    "Perform Computer Repair and Maintenance",
-                    "Install Computer Software",
-                    "Perform Network Design and Management",
-                    "Manage Computerized Database System",
-                    "Computer Programming Principles"
-                  ]
-              }
-              }
+        "6": {
+          "attachment_modules": {
+            "4": { "same_as": ["5", "4"] },
+            "7": {
+              "units": [
+                "Perform Computer Essentials",
+                "Perform Computer Operations",
+                "Perform Computer Network Setup",
+                "Perform Computer Repair and Maintenance",
+                "Install Computer Software",
+                "Perform Network Design and Management",
+                "Manage Computerized Database System",
+                "Computer Programming Principles"
+              ]
             }
           }
         }
-      },
+      }
+    }
+  }
+},
      "Hospitality": {
       "sections": {
         "Food and Beverage": {
