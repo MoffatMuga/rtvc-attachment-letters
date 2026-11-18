@@ -520,6 +520,30 @@
                       ]
                     }
                   }
+                },
+                "6": {
+                  "attachment_modules": {
+                    "6": {
+                      "units": [
+                        "Plaiting and Braiding",
+                        "Barbering service",
+                        "Manicure and pedicure service",
+                        "Make up service",
+                        "Hair additions service",
+                        "Hair styling service",
+                        "Nail care service",
+                        "Dread locking services",
+                        "Hair removal service",
+                        "Hair cutting services",
+                        "Facial treatment services",
+                        "Chemical Reformation",
+                        "Hair Extensions",
+                        "Manage Hair and Beauty Parlor",
+                        "Hair Coloring",
+                        "Body Massage"
+                      ]
+                    }
+                  }
                 }
               }
             }
