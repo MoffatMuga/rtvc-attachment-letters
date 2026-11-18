@@ -444,7 +444,19 @@
                     "5",
                     "5"
                   ]
-                }
+                },
+              "7":{
+                 "units": [
+                    "Perform Computer Essentials",
+                    "Perform Computer Operations",
+                    "Perform Computer Network Setup",
+                    "Perform Computer Repair and Maintenance",
+                    "Install Computer Software",
+                    "Perform Network Design and Management",
+                    "Manage Computerized Database System",
+                    "Computer Programming Principles"
+                  ]
+              }
               }
             }
           }
