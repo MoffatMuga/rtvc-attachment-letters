@@ -458,28 +458,60 @@
                   "attachment_modules": {
                     "2": {
                       "units": [
-                        "Core unit 1",
-                        "Core unit 2",
-                        "Core unit 3",
-                        "Core unit 4"
+                        "Starters and starter accompaniment Preparation",
+                        "Main Meal Preparation",
+                        "Desserts Preparation",
+                        "Pastries Preparation",
+                        "Specialty Dishes Preparation"
                       ]
                     }
                   }
                 },
                 "5": {
                   "attachment_modules": {
-                    "4": {
+                    "5": {
                       "units": [
-                        "Core unit 1",
-                        "Core unit 2",
-                        "Core unit 3",
-                        "Core unit 4",
-                        "Core unit 5",
-                        "Core unit 6"
+                        "Starters and Starter Accompaniments",
+                        "Main Meal Preparation",
+                        "Desserts Preparation",
+                        "Pastries Preparation",
+                        "Specialty Dishes",
+                        "Food and Beverage Service Skills",
+                        "Food And Beverage Service Techniques",
+                        "Mocktails and Cocktails",
+                        "Bar Keeping Operations",
+                        "Banquets and Events Operations",
+                        "Food And Beverage Costing and Control"
                       ]
                     }
                   }
-                }
+                },
+                "6": {
+                    "attachment_modules": {
+                      "5": {
+                        "same_as": [
+                          "5",
+                          "5"
+                        ]
+                      },
+                      "7": {
+                        "units": [
+                          "Starters and Starter Accompaniments",
+                          "Main Meal Preparation",
+                          "Desserts Preparation",
+                          "Pastries Preparation",
+                          "Specialty Dishes",
+                          "Food and Beverage Service Skills",
+                          "Food And Beverage Service Techniques",
+                          "Mocktails and Cocktails",
+                          "Bar Keeping Operations",
+                          "Banquets and Events Operations",
+                          "Food And Beverage Costing and Control"
+                          
+                        ]
+                      }
+                    }
+                  }
               }
             }
           }
