@@ -26,6 +26,13 @@ export async function GET(req: NextRequest) {
       date: (r.decided_at ?? "").slice(0, 10),
     };
   });
+  const ins = await db().execute({
+    sql: "SELECT file_name, uploaded_at FROM insurance_letters WHERE trainee_id = ?",
+    args: [t.id],
+  });
+  const insurance = ins.rows.length
+    ? { name: String(ins.rows[0].file_name), date: String(ins.rows[0].uploaded_at).slice(0, 10) }
+    : null;
   const { assessor_id: _a, ...profile } = t;
   void _a;
   return Response.json({
@@ -33,6 +40,7 @@ export async function GET(req: NextRequest) {
     trainee: profile,
     assessor: assessor && { name: assessor.name, phone: assessor.phone, email: assessor.email, department: assessor.department },
     letters,
+    insurance,
   });
 }
 

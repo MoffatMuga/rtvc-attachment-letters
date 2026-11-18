@@ -7,6 +7,7 @@ type Me = {
   whatsapp: string;
   trainee: Record<string, string | null> & { name: string; adm_no: string; email: string; consent_at: string | null };
   assessor: { name: string; phone: string; email: string; department: string } | null;
+  insurance: { name: string; date: string } | null;
   letters: { id: number; ref: string; course: string; level: string; period: string; date: string }[];
 };
 
@@ -178,6 +179,20 @@ export default function TraineePage() {
           </div>
         ) : (
           <p className="text-sm text-slate-600">Not assigned yet. The ILO will assign one and you will get an email.</p>
+        )}
+      </section>
+
+      <section className="mb-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+        <h2 className="mb-2 font-semibold">Your insurance letter</h2>
+        {me.insurance ? (
+          <div className="flex items-center justify-between gap-2 text-sm">
+            <span>{me.insurance.name}<br /><span className="text-slate-500">Uploaded {me.insurance.date}</span></span>
+            <a href="/api/trainee/insurance" className="shrink-0 rounded-lg bg-blue-900 px-3 py-2 font-medium text-white">Download</a>
+          </div>
+        ) : (
+          <p className="text-sm text-slate-600">
+            Not uploaded yet. The ILO uploads insurance letters as soon as the insurer sends them. Check back later.
+          </p>
         )}
       </section>
 

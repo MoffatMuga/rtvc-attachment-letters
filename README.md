@@ -144,3 +144,6 @@ The letter prints the course name, then optional bracket text, e.g. "Building Te
 ## Feedback
 
 After a trainee submits a request they can rate the experience (1 to 5 stars, optional comment). Read the results in the ILO area under **Feedback**.
+
+## Insurance letters
+ILO > Insurance. Upload the insurer's zip; it is unzipped in the browser (Vercel limits requests to 4.5 MB), files are matched to trainees by admission number or name in the file name, and you can fix any match by hand. Each file (PDF/JPG/PNG, up to 4 MB) is stored per trainee. Trainees download theirs from their account; until then it says "Not uploaded yet". Uploading again replaces the old file. Needs `npm install jszip`.

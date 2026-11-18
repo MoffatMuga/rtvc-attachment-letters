@@ -93,6 +93,14 @@ export function ensureDb(): Promise<void> {
       ]);
       await c.batch([
         `CREATE TABLE IF NOT EXISTS hits (key TEXT NOT NULL, ts INTEGER NOT NULL)`,
+        `CREATE TABLE IF NOT EXISTS insurance_letters (
+          trainee_id INTEGER PRIMARY KEY,
+          file_name TEXT NOT NULL,
+          mime TEXT NOT NULL,
+          size INTEGER NOT NULL,
+          content TEXT NOT NULL,
+          uploaded_at TEXT NOT NULL
+        )`,
         `CREATE TABLE IF NOT EXISTS feedback (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           created_at TEXT NOT NULL,
