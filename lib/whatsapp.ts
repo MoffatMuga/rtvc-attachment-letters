@@ -13,7 +13,8 @@ import { getSetting } from "./db";
 export async function getWhatsapp(): Promise<string> {
   try {
     const saved = await getSetting("whatsapp");
-    if (saved !== null) return waNumber(saved);
+    const n = waNumber(saved ?? "");
+    if (n) return n;
   } catch (e) {
     console.error("Could not read WhatsApp setting", e);
   }

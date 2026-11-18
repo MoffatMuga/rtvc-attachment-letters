@@ -10,6 +10,7 @@ const TOPICS = ["Attachment letter", "My assessor", "My firm details", "Somethin
  */
 export default function ChatFab() {
   const [wa, setWa] = useState("");
+  const [loaded, setLoaded] = useState(false);
   const [open, setOpen] = useState(false);
   const [teaser, setTeaser] = useState(false);
   const [topic, setTopic] = useState(TOPICS[0]);
@@ -18,7 +19,7 @@ export default function ChatFab() {
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
-    fetch("/api/public-config").then((r) => r.json()).then((d) => setWa(d.whatsapp || "")).catch(() => {});
+    fetch("/api/public-config").then((r) => r.json()).then((d) => setWa(d.whatsapp || "")).catch(() => {}).finally(() => setLoaded(true));
   }, []);
 
   // A small "Need help?" bubble pops up once, a few seconds after the page loads.
@@ -32,7 +33,7 @@ export default function ChatFab() {
     return () => { clearTimeout(on); clearTimeout(off); };
   }, [wa]);
 
-  if (!wa) return null;
+  if (!loaded) return null;
 
   function dismissTeaser() {
     setTeaser(false);
@@ -53,6 +54,12 @@ export default function ChatFab() {
   return (
     <div className="fixed bottom-4 right-4 z-40 flex flex-col items-end gap-3 print:hidden">
       {open && (
+        !wa ? (
+        <div className="chat-pop w-[min(21rem,calc(100vw-2rem))] rounded-2xl bg-white p-4 text-sm shadow-2xl ring-1 ring-slate-200">
+          <p className="font-semibold">Chat with the ILO</p>
+          <p className="mt-1 text-slate-600">WhatsApp chat is not switched on yet. Please check back soon, or visit the ILO office.</p>
+        </div>
+        ) : (
         <form onSubmit={send} className="chat-pop w-[min(21rem,calc(100vw-2rem))] overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200">
           <div className="flex items-center justify-between bg-green-600 px-4 py-3 text-white">
             <div>
@@ -81,6 +88,7 @@ export default function ChatFab() {
             </button>
           </div>
         </form>
+        )
       )}
 
       {!open && teaser && (
