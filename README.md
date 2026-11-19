@@ -147,3 +147,12 @@ After a trainee submits a request they can rate the experience (1 to 5 stars, op
 
 ## Insurance letters
 ILO > Insurance. Upload the insurer's zip; it is unzipped in the browser (Vercel limits requests to 4.5 MB), files are matched to trainees by admission number or name in the file name, and you can fix any match by hand. Each file (PDF/JPG/PNG, up to 4 MB) is stored per trainee. Trainees download theirs from their account; until then it says "Not uploaded yet". Uploading again replaces the old file. Needs `npm install jszip`.
+
+## Due list
+ILO > Due list. Upload an Excel or CSV with headings Name, Admission No, Department (template provided). Requests whose admission number is not on the list get a red "Not on due list" badge in the ILO queue; listed ones get a green badge. Admission numbers are compared ignoring case, spaces and punctuation. Nothing is blocked. With no list uploaded, nothing is flagged. Uploading replaces the old list.
+
+## WhatsApp nudge (approved requests)
+Approved requests show a green WhatsApp button that opens a chat with the trainee, pre-filled with a short message and the portal link. You press send. It never carries the letter. Invalid phone numbers show "Check phone number" instead. Email stays the automatic delivery.
+
+## Withdraw an approved letter
+On the Approved tab, "Withdraw" lets you write a reason (pre-filled, editable). The request moves to Rejected (the reference number stays visible there), the letter disappears from the trainee's account and from the Excel log, and the trainee is emailed the reason with a link to apply again. The Rejected tab also has a WhatsApp button with the same reason and the apply link. Rejected requests no longer block a new request from the same trainee.
