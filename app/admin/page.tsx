@@ -90,17 +90,22 @@ export default function Admin() {
     load();
   }
 
-  async function withdraw(r: Row) {
+  async function withdraw(r: Row, alsoWhatsapp = false) {
     if (!wd || wd.id !== r.id) return;
-    if (!confirm(`Withdraw the letter for ${r.name} and email them the reason?`)) return;
+    // open the tab first (inside the tap) so the browser does not block it; it is filled in after success
+    const tab = alsoWhatsapp ? window.open("about:blank", "_blank") : null;
+    if (!confirm(`Withdraw the letter for ${r.name} and email them the reason${alsoWhatsapp ? " and open WhatsApp" : ""}?`)) { tab?.close(); return; }
     setBusyId(r.id); setMessage("");
     const res = await fetch(`/api/admin/requests/${r.id}/revoke`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ reason: wd.text }),
     });
     const data = await res.json();
-    setMessage(res.ok ? `Withdrawn ${r.ref ?? ""} for ${r.name}${data.emailed ? " and emailed" : " (email could not be sent)"}. Open the Rejected tab to also WhatsApp them.` : data.error);
-    if (res.ok) setWd(null);
+    setMessage(res.ok ? `Withdrawn ${r.ref ?? ""} for ${r.name}${data.emailed ? " and emailed" : " (email could not be sent)"}. ` : data.error);
+    if (res.ok) {
+      if (tab) tab.location.href = waLink({ name: r.name, phone: r.phone, status: "rejected", reject_reason: wd.text });
+      setWd(null);
+    } else tab?.close();
     setBusyId(null);
     load();
   }
@@ -200,12 +205,16 @@ export default function Admin() {
             </div>
             {wd?.id === r.id && (
               <div className="mt-3 rounded-lg bg-red-50 p-3 text-sm">
-                <p className="mb-1 font-medium text-red-800">Message to {r.name.split(" ")[0]} (sent by email)</p>
+                <p className="mb-1 font-medium text-red-800">Message to {r.name.split(" ")[0]} (emailed; WhatsApp too if you choose)</p>
                 <textarea value={wd.text} onChange={(e) => setWd({ id: r.id, text: e.target.value })} rows={3} maxLength={400}
                   className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base" />
-                <div className="mt-2 flex gap-2">
+                <div className="mt-2 flex flex-wrap gap-2">
                   <button disabled={busyId === r.id || !wd.text.trim()} onClick={() => withdraw(r)}
                     className="rounded-lg bg-red-700 px-4 py-2 font-semibold text-white disabled:opacity-50">Withdraw &amp; email</button>
+                  {waPhone(r.phone) && (
+                    <button disabled={busyId === r.id || !wd.text.trim()} onClick={() => withdraw(r, true)}
+                      className="rounded-lg bg-green-600 px-4 py-2 font-semibold text-white disabled:opacity-50">Withdraw, email &amp; WhatsApp</button>
+                  )}
                   <button onClick={() => setWd(null)} className="rounded-lg px-4 py-2 ring-1 ring-slate-300">Cancel</button>
                 </div>
               </div>
