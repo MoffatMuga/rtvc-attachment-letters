@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { clientIp, tooMany } from "@/lib/guard";
 import { checkLoginCode, makeTraineeToken, TRAINEE_COOKIE, traineeCookieOptions } from "@/lib/trainee-auth";
-import { getTraineeByEmail } from "@/lib/trainees";
+import { getTraineeByEmail, hasApprovedLetter } from "@/lib/trainees";
 
 export async function POST(req: NextRequest) {
   if (await tooMany(`login:ip:${clientIp(req)}`, 100, 900)) {
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   const email = String(body?.email ?? "").trim().toLowerCase();
   const code = String(body?.code ?? "").trim();
   const t = /^\d{6}$/.test(code) ? await getTraineeByEmail(email) : null;
-  if (!t || !(await checkLoginCode(t.email, code))) {
+  if (!t || !(await hasApprovedLetter(t.adm_no)) || !(await checkLoginCode(t.email, code))) {
     return Response.json({ error: "That code is wrong or has expired." }, { status: 401 });
   }
   await db().execute({

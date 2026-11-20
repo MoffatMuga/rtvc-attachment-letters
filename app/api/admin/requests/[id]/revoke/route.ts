@@ -25,6 +25,26 @@ export async function POST(
     args: [new Date().toISOString(), `Withdrawn: ${why}`, row.id],
   });
 
+  // No other approved letter for this admission number? Then remove the trainee's account and everything on it
+  // (profile, assessor link, insurance letter, login codes). They get a fresh account when the corrected letter is approved.
+  let accountCleared = false;
+  const others = await db().execute({
+    sql: "SELECT 1 FROM requests WHERE adm_no = ? AND status = 'approved' LIMIT 1",
+    args: [row.adm_no],
+  });
+  if (!others.rows.length) {
+    const t = await db().execute({ sql: "SELECT id, email FROM trainees WHERE adm_no = ?", args: [row.adm_no] });
+    const ids = t.rows.map((x) => Number(x.id));
+    const emails = [...new Set([row.email, ...t.rows.map((x) => String(x.email))])];
+    const stmts = [
+      ...ids.map((id) => ({ sql: "DELETE FROM insurance_letters WHERE trainee_id = ?", args: [id] })),
+      ...emails.map((e) => ({ sql: "DELETE FROM login_codes WHERE email = ?", args: [e] })),
+      { sql: "DELETE FROM trainees WHERE adm_no = ?", args: [row.adm_no] },
+    ];
+    await db().batch(stmts, "write");
+    accountCleared = ids.length > 0;
+  }
+
   const origin = (process.env.APP_URL || new URL(req.url).origin).replace(/\/+$/, "");
   let emailed = false;
   try {
@@ -34,11 +54,12 @@ export async function POST(
       text:
         `Dear ${row.name},\n\nThe attachment letter we sent you${row.ref ? ` (${row.ref})` : ""} has been withdrawn. Please do not use it.\n\n` +
         `Reason: ${why}\n\nPlease submit a new request with the correct details here:\n${origin}\n\n` +
+        (accountCleared ? `Your ILO Connect account has been reset. You will get a new login link when your corrected letter is approved.\n\n` : "") +
         `ILO Connect\nIndustrial Liaison Office, Rangwe Technical and Vocational College`,
     });
     emailed = true;
   } catch (e) {
     console.error("Withdraw email failed", e);
   }
-  return Response.json({ ok: true, emailed });
+  return Response.json({ ok: true, emailed, accountCleared });
 }

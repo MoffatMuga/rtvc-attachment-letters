@@ -2,7 +2,7 @@ import { createHash, createHmac, randomInt, timingSafeEqual } from "crypto";
 import type { NextRequest } from "next/server";
 import { db, ensureDb } from "./db";
 import { sendMail } from "./mail";
-import { getTrainee, type Trainee } from "./trainees";
+import { getTrainee, hasApprovedLetter, type Trainee } from "./trainees";
 
 export const TRAINEE_COOKIE = "trainee_session";
 const SESSION_S = 60 * 60 * 24 * 14; // 14 days
@@ -48,7 +48,9 @@ function readTraineeId(token: string | undefined): number | null {
 /** The signed-in trainee, or null. */
 export async function currentTrainee(req: NextRequest): Promise<Trainee | null> {
   const id = readTraineeId(req.cookies.get(TRAINEE_COOKIE)?.value);
-  return id == null ? null : getTrainee(id);
+  if (id == null) return null;
+  const t = await getTrainee(id);
+  return t && (await hasApprovedLetter(t.adm_no)) ? t : null; // a withdrawn letter ends access
 }
 
 /** Creates a code and emails it. Silent about whether the address exists. */

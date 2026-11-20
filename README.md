@@ -165,3 +165,6 @@ After signing in, the ILO pages share a left panel (a slide-out menu on phones):
 
 ## Sign-in pages and trainee account
 The ILO and trainee sign-in pages use a split layout (message on the left, form on the right; stacked on phones), from components/AuthSplit.tsx. The trainee account page has a header with status chips (letter, assessor, insurance, placement) and cards for assessor, insurance letter, letters and placement details.
+
+## Who can log in
+Login codes are only sent to trainees whose attachment letter has been approved (and not withdrawn). Any other email is told no approved letter was found. Withdrawing a trainee's only approved letter deletes their account (profile, assessor link, insurance letter, login codes) and ends any open session; approving the corrected request creates a fresh account. If they still have another approved letter, the account is kept.

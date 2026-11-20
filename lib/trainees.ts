@@ -118,6 +118,13 @@ export async function getTrainee(id: number): Promise<Trainee | null> {
   return r.rows.length ? toTrainee(r.rows[0] as unknown as Record<string, unknown>) : null;
 }
 
+/** True when this admission number has at least one approved (emailed) attachment letter. Only these trainees may log in. */
+export async function hasApprovedLetter(admNo: string): Promise<boolean> {
+  await ensureDb();
+  const r = await db().execute({ sql: "SELECT 1 FROM requests WHERE adm_no = ? AND status = 'approved' LIMIT 1", args: [admNo] });
+  return r.rows.length > 0;
+}
+
 export async function getTraineeByEmail(email: string): Promise<Trainee | null> {
   await ensureDb();
   const r = await db().execute({

@@ -2,9 +2,9 @@ import type { NextRequest } from "next/server";
 import { db, ensureDb } from "@/lib/db";
 import { clientIp, tooMany } from "@/lib/guard";
 import { sendLoginCode } from "@/lib/trainee-auth";
-import { getTraineeByEmail, upsertTraineeFromRequest } from "@/lib/trainees";
+import { getTraineeByEmail, hasApprovedLetter, upsertTraineeFromRequest } from "@/lib/trainees";
 
-/** Always answers the same way, so nobody can test which emails have accounts. */
+/** Codes are only sent to trainees whose attachment letter was approved and emailed. */
 export async function POST(req: NextRequest) {
   if (await tooMany(`code:ip:${clientIp(req)}`, 60, 3600)) {
     return Response.json({ error: "Too many attempts. Try again later." }, { status: 429 });
@@ -31,7 +31,13 @@ export async function POST(req: NextRequest) {
         t = await getTraineeByEmail(email);
       }
     }
-    if (t) await sendLoginCode(t.email, t.name);
+    if (!t || !(await hasApprovedLetter(t.adm_no))) {
+      return Response.json(
+        { error: "We could not find an approved attachment letter for this email. Use the email you gave when you requested your letter." },
+        { status: 404 },
+      );
+    }
+    await sendLoginCode(t.email, t.name);
   } catch (e) {
     console.error("Login code failed", e);
     return Response.json({ error: "Could not send the code. Try again shortly." }, { status: 502 });

@@ -95,14 +95,14 @@ export default function Admin() {
 
   async function withdraw(r: Row) {
     if (!wd || wd.id !== r.id) return;
-    if (!confirm(`Withdraw the letter for ${r.name} and email them the reason?`)) return;
+    if (!confirm(`Withdraw the letter for ${r.name}, clear their ILO Connect account (details, assessor, insurance letter) and email them the reason?`)) return;
     setBusyId(r.id); setMessage("");
     const res = await fetch(`/api/admin/requests/${r.id}/revoke`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ reason: wd.text }),
     });
     const data = await res.json();
-    setMessage(res.ok ? `Withdrawn ${r.ref ?? ""} for ${r.name}${data.emailed ? " and emailed" : " (email could not be sent)"}. ` : data.error);
+    setMessage(res.ok ? `Withdrawn ${r.ref ?? ""} for ${r.name}${data.emailed ? " and emailed" : " (email could not be sent)"}${data.accountCleared ? "; account cleared" : ""}. ` : data.error);
     if (res.ok) {
       setWaNext(waPhone(r.phone) ? { name: r.name, phone: r.phone, href: waLink({ name: r.name, phone: r.phone, status: "rejected", reject_reason: wd.text }) } : null);
       setWd(null);
