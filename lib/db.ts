@@ -101,6 +101,12 @@ export function ensureDb(): Promise<void> {
           content TEXT NOT NULL,
           uploaded_at TEXT NOT NULL
         )`,
+        `CREATE TABLE IF NOT EXISTS due_list (
+          adm_key TEXT PRIMARY KEY,
+          adm_no TEXT NOT NULL,
+          name TEXT NOT NULL,
+          department TEXT NOT NULL
+        )`,
         `CREATE TABLE IF NOT EXISTS feedback (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           created_at TEXT NOT NULL,

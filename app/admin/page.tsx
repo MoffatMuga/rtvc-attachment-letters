@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 type Row = {
   id: number; created_at: string; status: string; name: string; adm_no: string;
   email: string; phone: string; course: string; section: string; cycle: string; level: string; module: string;
-  start_month: number; start_year: number; ref: string | null; reject_reason: string | null; due?: boolean | null; label?: string;
+  start_month: number; start_year: number; ref: string | null; reject_reason: string | null; due?: boolean | null;
 };
 
 /** Kenyan phone to WhatsApp format (254...), or "" if it does not look valid. */
@@ -38,7 +38,6 @@ export default function Admin() {
   const [nextRef, setNextRef] = useState("");
   const [busyId, setBusyId] = useState<number | null>(null);
   const [message, setMessage] = useState("");
-  const [waNext, setWaNext] = useState<{ name: string; phone: string; href: string } | null>(null);
   const [wd, setWd] = useState<{ id: number; text: string } | null>(null);
 
   const load = useCallback(async () => {
@@ -100,11 +99,8 @@ export default function Admin() {
       body: JSON.stringify({ reason: wd.text }),
     });
     const data = await res.json();
-    setMessage(res.ok ? `Withdrawn ${r.ref ?? ""} for ${r.name}${data.emailed ? " and emailed" : " (email could not be sent)"}. ` : data.error);
-    if (res.ok) {
-      setWaNext(waPhone(r.phone) ? { name: r.name, phone: r.phone, href: waLink({ name: r.name, phone: r.phone, status: "rejected", reject_reason: wd.text }) } : null);
-      setWd(null);
-    }
+    setMessage(res.ok ? `Withdrawn ${r.ref ?? ""} for ${r.name}${data.emailed ? " and emailed" : " (email could not be sent)"}. Open the Rejected tab to also WhatsApp them.` : data.error);
+    if (res.ok) setWd(null);
     setBusyId(null);
     load();
   }
@@ -150,16 +146,6 @@ export default function Admin() {
         ))}
       </div>
       {message && <p className="mb-3 rounded-lg bg-blue-50 p-3 text-sm text-blue-900">{message}</p>}
-      {waNext && (
-        <div className="mb-3 flex items-center justify-between gap-2 rounded-lg bg-green-50 p-3 text-sm text-green-900">
-          <span>Also tell {waNext.name.split(" ")[0]} on WhatsApp?</span>
-          <span className="flex shrink-0 gap-2">
-            <a href={waNext.href} target="_blank" rel="noopener noreferrer" onClick={() => setWaNext(null)}
-              className="rounded-lg bg-green-600 px-3 py-2 font-medium text-white">WhatsApp 0{waPhone(waNext.phone).slice(3)}</a>
-            <button onClick={() => setWaNext(null)} className="text-slate-500 underline">Skip</button>
-          </span>
-        </div>
-      )}
       {rows.length === 0 && <p className="py-10 text-center text-slate-500">Nothing here.</p>}
       <ul className="space-y-3">
         {rows.map((r) => (
@@ -171,7 +157,7 @@ export default function Admin() {
             <p className="text-sm text-slate-600">{r.adm_no} · {r.email}</p>
             {r.phone && <p className="text-sm text-slate-600">{r.phone}</p>}
             <p className="text-sm text-slate-600">
-              {r.label ?? r.course}, Cycle {r.cycle}, Level {r.level}{r.module ? `, Module ${r.module}` : ""}
+              {r.course}{r.section ? ` (${r.section})` : ""}, Cycle {r.cycle}, Level {r.level}{r.module ? `, Module ${r.module}` : ""}
             </p>
             <p className="text-sm text-slate-600">
               Starts {MONTHS[r.start_month - 1]} {r.start_year}
@@ -217,7 +203,7 @@ export default function Admin() {
                 <p className="mb-1 font-medium text-red-800">Message to {r.name.split(" ")[0]} (sent by email)</p>
                 <textarea value={wd.text} onChange={(e) => setWd({ id: r.id, text: e.target.value })} rows={3} maxLength={400}
                   className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base" />
-                <div className="mt-2 flex flex-wrap gap-2">
+                <div className="mt-2 flex gap-2">
                   <button disabled={busyId === r.id || !wd.text.trim()} onClick={() => withdraw(r)}
                     className="rounded-lg bg-red-700 px-4 py-2 font-semibold text-white disabled:opacity-50">Withdraw &amp; email</button>
                   <button onClick={() => setWd(null)} className="rounded-lg px-4 py-2 ring-1 ring-slate-300">Cancel</button>

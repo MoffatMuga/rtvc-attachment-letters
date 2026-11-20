@@ -156,6 +156,3 @@ Approved requests show a green WhatsApp button that opens a chat with the traine
 
 ## Withdraw an approved letter
 On the Approved tab, "Withdraw" lets you write a reason (pre-filled, editable). The request moves to Rejected (the reference number stays visible there), the letter disappears from the trainee's account and from the Excel log, and the trainee is emailed the reason with a link to apply again. The Rejected tab also has a WhatsApp button with the same reason and the apply link. Rejected requests no longer block a new request from the same trainee.
-
-## Section as course name
-For Hospitality and Building Technology the letter shows the chosen section only (Cosmetology, Food and Beverage, Building Technology; level 4 shows its "option", e.g. Masonry), not "Hospitality (Cosmetology)". To switch this on or off for any course, add `"section_as_course": true` (or `false`) inside that course in rules.json.
