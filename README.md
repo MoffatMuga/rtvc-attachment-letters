@@ -162,3 +162,6 @@ For Hospitality and Building Technology the letter shows the chosen section only
 
 ## Admin layout
 After signing in, the ILO pages share a left panel (a slide-out menu on phones): Attachment requests, Trainees & assessors (with the Excel export), Due list, Insurance letters, Feedback, Stamp & signature. "Download Excel log" sits at the top of the requests page.
+
+## Sign-in pages and trainee account
+The ILO and trainee sign-in pages use a split layout (message on the left, form on the right; stacked on phones), from components/AuthSplit.tsx. The trainee account page has a header with status chips (letter, assessor, insurance, placement) and cards for assessor, insurance letter, letters and placement details.

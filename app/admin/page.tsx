@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import AuthSplit from "@/components/AuthSplit";
 
 type Row = {
   id: number; created_at: string; status: string; name: string; adm_no: string;
@@ -114,16 +115,23 @@ export default function Admin() {
 
   if (!authed) {
     return (
-      <main className="mx-auto w-full max-w-sm flex-1 px-4 py-16">
-        <h1 className="mb-4 text-center text-xl font-bold">ILO sign in</h1>
-        <form onSubmit={login} className="space-y-3 rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password" autoFocus
-            className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-base" />
+      <AuthSplit
+        heading="Welcome back, ILO"
+        tagline="Review requests, approve letters and keep every trainee on track."
+        points={["Approve attachment letters in one tap", "See who is on the due list", "Assign assessors and share insurance letters"]}
+      >
+        <h2 className="mb-1 text-2xl font-bold text-slate-900">Sign in</h2>
+        <p className="mb-5 text-sm text-slate-500">Industrial Liaison Office dashboard</p>
+        <form onSubmit={login} className="space-y-4 rounded-2xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
+          <label className="block text-sm font-medium text-slate-700">Password
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password" autoFocus
+              className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-3 text-base outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100" />
+          </label>
           {loginError && <p className="text-sm text-red-700">{loginError}</p>}
-          <button className="w-full rounded-lg bg-blue-900 px-4 py-3 font-semibold text-white">Sign in</button>
+          <button className="w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white shadow hover:bg-blue-700">Sign in</button>
         </form>
-      </main>
+      </AuthSplit>
     );
   }
 

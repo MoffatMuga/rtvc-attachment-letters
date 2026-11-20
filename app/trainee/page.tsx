@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import AuthSplit from "@/components/AuthSplit";
 import PrivacyNotice from "@/components/PrivacyNotice";
 
 type Me = {
@@ -25,7 +26,7 @@ const FIELDS = [
   ["end_date", "Expected end date", ""],
 ] as const;
 
-const input = "w-full rounded-lg border border-slate-300 px-3 py-2.5 text-base";
+const input = "w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100";
 
 function Block({ title, rows }: { title: string; rows: [string, string | null][] }) {
   return (
@@ -42,6 +43,38 @@ function Block({ title, rows }: { title: string; rows: [string, string | null][]
         ))}
       </dl>
     </div>
+  );
+}
+
+const ico = (d: string) => (
+  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={d} /></svg>
+);
+const ICONS = {
+  user: "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z",
+  shield: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",
+  file: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h8",
+  pin: "M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0zM12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
+};
+
+function Card({ icon, title, children, action }: { icon: keyof typeof ICONS; title: string; children: React.ReactNode; action?: React.ReactNode }) {
+  return (
+    <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <h2 className="flex items-center gap-2 font-semibold text-slate-900">
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-700">{ico(ICONS[icon])}</span>{title}
+        </h2>
+        {action}
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function Chip({ ok, yes, no }: { ok: boolean; yes: string; no: string }) {
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${ok ? "bg-green-400/20 text-green-100 ring-1 ring-green-300/40" : "bg-white/10 text-blue-100 ring-1 ring-white/20"}`}>
+      <span className={`h-1.5 w-1.5 rounded-full ${ok ? "bg-green-300" : "bg-amber-300"}`} />{ok ? yes : no}
+    </span>
   );
 }
 
@@ -109,30 +142,38 @@ export default function TraineePage() {
 
   if (me === null) {
     return (
-      <main className="mx-auto w-full max-w-sm flex-1 px-4 py-12">
-        <h1 className="mb-1 text-center text-xl font-bold">ILO Connect login</h1>
-        <p className="mb-4 text-center text-sm text-slate-600">
-          For trainees whose attachment letter has been approved. Use the email you gave when you requested your letter.
+      <AuthSplit
+        heading="Your attachment, all in one place"
+        tagline="Log in to get your letters, meet your assessor and reach the ILO."
+        points={["Download your attachment letter any time", "See the assessor assigned to you", "Save your firm and supervisor details", "Message the ILO on WhatsApp"]}
+        footer={<a href="/" className="text-slate-500 underline">Request an attachment letter</a>}
+      >
+        <h2 className="mb-1 text-2xl font-bold text-slate-900">Trainee login</h2>
+        <p className="mb-5 text-sm text-slate-500">
+          For trainees whose letter has been approved. Use the email you gave when you requested it.
         </p>
         {step === "email" ? (
-          <form onSubmit={sendCode} className="space-y-3 rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-              placeholder="Your email" autoFocus className={input} />
+          <form onSubmit={sendCode} className="space-y-4 rounded-2xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
+            <label className="block text-sm font-medium text-slate-700">Email
+              <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com" autoFocus className={`${input} mt-1 py-3`} />
+            </label>
             {err && <p className="text-sm text-red-700">{err}</p>}
-            <button disabled={busy} className="w-full rounded-lg bg-blue-900 px-4 py-3 font-semibold text-white disabled:opacity-50">
+            <button disabled={busy} className="w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white shadow hover:bg-blue-700 disabled:opacity-50">
               {busy ? "Sending..." : "Send me a code"}
             </button>
+            <p className="text-center text-xs text-slate-400">We email you a 6-digit code. No password needed.</p>
           </form>
         ) : (
-          <form onSubmit={verify} className="space-y-3 rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+          <form onSubmit={verify} className="space-y-4 rounded-2xl bg-white p-6 shadow-lg ring-1 ring-slate-200">
             <p className="text-sm text-slate-600">
               If <strong>{email}</strong> belongs to an approved trainee, a 6-digit code is on its way. Check Spam too.
             </p>
             <input inputMode="numeric" autoComplete="one-time-code" maxLength={6} required value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-              placeholder="6-digit code" autoFocus className={`${input} text-center tracking-widest`} />
+              placeholder="000000" autoFocus className={`${input} py-3 text-center text-xl tracking-[0.5em]`} />
             {err && <p className="text-sm text-red-700">{err}</p>}
-            <button disabled={busy || code.length !== 6} className="w-full rounded-lg bg-blue-900 px-4 py-3 font-semibold text-white disabled:opacity-50">
+            <button disabled={busy || code.length !== 6} className="w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white shadow hover:bg-blue-700 disabled:opacity-50">
               {busy ? "Checking..." : "Log in"}
             </button>
             <button type="button" onClick={() => { setStep("email"); setErr(""); setCode(""); }} className="w-full text-sm text-slate-500 underline">
@@ -140,110 +181,50 @@ export default function TraineePage() {
             </button>
           </form>
         )}
-        <p className="mt-6 text-center text-sm"><a href="/" className="text-slate-500 underline">Request an attachment letter</a></p>
-      </main>
+      </AuthSplit>
     );
   }
 
   const t = me.trainee;
   const hasProfile = !!t.profile_updated_at;
-  return (
-    <main className="mx-auto w-full max-w-xl flex-1 px-4 py-6">
-      <div className="mb-4 flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold">{t.name}</h1>
-          <p className="text-sm text-slate-600">{t.adm_no} · {t.email}</p>
-        </div>
-        <button onClick={logout} className="text-sm text-slate-500 underline">Log out</button>
+  const initials = t.name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+
+  const details = hasProfile && !editing ? (
+    <Card icon="pin" title="Where you are attached" action={
+      <button onClick={() => { setSaved(""); setErr(""); setEditing(true); }} className="rounded-lg px-3 py-1.5 text-sm font-medium ring-1 ring-slate-300 hover:bg-slate-50">Edit</button>
+    }>
+      <div className="space-y-5">
+        {saved && <p className="rounded-lg bg-green-50 p-3 text-sm text-green-800">{saved}</p>}
+        <Block title="Firm" rows={[
+          ["Name", t.firm_name], ["Town / county", t.firm_location], ["Address", t.firm_address],
+          ["Phone", t.firm_phone], ["Department", t.department_at_firm],
+        ]} />
+        <Block title="Supervisor" rows={[
+          ["Name", t.supervisor_name], ["Job title", t.supervisor_title],
+          ["Phone", t.supervisor_phone], ["Email", t.supervisor_email],
+        ]} />
+        <Block title="Attachment" rows={[
+          ["Started", t.start_date], ["Expected end", t.end_date], ["Your phone", t.phone],
+        ]} />
+        <p className="text-xs text-slate-400">Last updated {(t.profile_updated_at ?? "").slice(0, 10)}</p>
       </div>
-
-      {me.whatsapp && (
-        <a
-          href={`https://wa.me/${me.whatsapp}?text=${encodeURIComponent(
-            `Hello ILO, this is ${t.name} (${t.adm_no}) from Rangwe TVC. I need help with my attachment: `,
-          )}`}
-          target="_blank" rel="noopener noreferrer"
-          className="mb-4 flex items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3 font-semibold text-white shadow-sm hover:bg-green-700"
-        >
-          Contact the ILO on WhatsApp
-        </a>
-      )}
-
-      <section className="mb-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-        <h2 className="mb-2 font-semibold">Your assessor</h2>
-        {me.assessor ? (
-          <div className="text-sm text-slate-700">
-            <p className="font-medium">{me.assessor.name}{me.assessor.department ? ` · ${me.assessor.department}` : ""}</p>
-            {me.assessor.phone && <p><a className="underline" href={`tel:${me.assessor.phone}`}>{me.assessor.phone}</a></p>}
-            {me.assessor.email && <p>{me.assessor.email}</p>}
-          </div>
-        ) : (
-          <p className="text-sm text-slate-600">Not assigned yet. The ILO will assign one and you will get an email.</p>
-        )}
-      </section>
-
-      <section className="mb-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-        <h2 className="mb-2 font-semibold">Your insurance letter</h2>
-        {me.insurance ? (
-          <div className="flex items-center justify-between gap-2 text-sm">
-            <span>{me.insurance.name}<br /><span className="text-slate-500">Uploaded {me.insurance.date}</span></span>
-            <a href="/api/trainee/insurance" className="shrink-0 rounded-lg bg-blue-900 px-3 py-2 font-medium text-white">Download</a>
-          </div>
-        ) : (
-          <p className="text-sm text-slate-600">
-            Not uploaded yet. The ILO uploads insurance letters as soon as the insurer sends them. Check back later.
-          </p>
-        )}
-      </section>
-
-      <section className="mb-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-        <h2 className="mb-2 font-semibold">Your letters</h2>
-        {me.letters.length === 0 && <p className="text-sm text-slate-600">None yet.</p>}
-        <ul className="space-y-2">
-          {me.letters.map((l) => (
-            <li key={l.id} className="flex items-center justify-between gap-2 text-sm">
-              <span>{l.ref}<br /><span className="text-slate-500">{l.course}, Level {l.level} · {l.period}</span></span>
-              <a href={`/api/trainee/letters/${l.id}`} className="shrink-0 rounded-lg px-3 py-2 ring-1 ring-slate-300">Download</a>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {hasProfile && !editing ? (
-        <section className="space-y-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-          <div className="flex items-center justify-between">
-            <h2 className="font-semibold">Where you are attached</h2>
-            <button onClick={() => { setSaved(""); setErr(""); setEditing(true); }}
-              className="rounded-lg px-3 py-1.5 text-sm ring-1 ring-slate-300">Edit</button>
-          </div>
-          {saved && <p className="rounded-lg bg-green-50 p-3 text-sm text-green-800">{saved}</p>}
-          <Block title="Firm" rows={[
-            ["Name", t.firm_name], ["Town / county", t.firm_location], ["Address", t.firm_address],
-            ["Phone", t.firm_phone], ["Department", t.department_at_firm],
-          ]} />
-          <Block title="Supervisor" rows={[
-            ["Name", t.supervisor_name], ["Job title", t.supervisor_title],
-            ["Phone", t.supervisor_phone], ["Email", t.supervisor_email],
-          ]} />
-          <Block title="Attachment" rows={[
-            ["Started", t.start_date], ["Expected end", t.end_date], ["Your phone", t.phone],
-          ]} />
-          <p className="text-xs text-slate-400">Last updated {(t.profile_updated_at ?? "").slice(0, 10)}</p>
-        </section>
-      ) : (
-      <form onSubmit={save} className="space-y-3 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-        <h2 className="font-semibold">Where you are attached</h2>
+    </Card>
+  ) : (
+    <Card icon="pin" title="Where you are attached">
+      <form onSubmit={save} className="space-y-3">
         <p className="text-sm text-slate-600">Fill this in once you have been accepted by a firm. Fields marked * are required.</p>
         <label className="block text-sm">Your phone
           <input className={`${input} mt-1`} value={form.phone ?? ""} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
         </label>
-        {FIELDS.map(([k, label, ph]) => (
-          <label key={k} className="block text-sm">{label}
-            <input className={`${input} mt-1`} placeholder={ph}
-              type={k.endsWith("_date") ? "date" : k === "supervisor_email" ? "email" : "text"}
-              value={form[k] ?? ""} onChange={(e) => setForm({ ...form, [k]: e.target.value })} />
-          </label>
-        ))}
+        <div className="grid gap-3 sm:grid-cols-2">
+          {FIELDS.map(([k, label, ph]) => (
+            <label key={k} className="block text-sm">{label}
+              <input className={`${input} mt-1`} placeholder={ph}
+                type={k.endsWith("_date") ? "date" : k === "supervisor_email" ? "email" : "text"}
+                value={form[k] ?? ""} onChange={(e) => setForm({ ...form, [k]: e.target.value })} />
+            </label>
+          ))}
+        </div>
         <PrivacyNotice compact />
         {!t.consent_at && (
           <label className="flex items-start gap-2 text-sm">
@@ -253,7 +234,7 @@ export default function TraineePage() {
         )}
         {err && <p className="text-sm text-red-700">{err}</p>}
         {saved && <p className="text-sm text-green-700">{saved}</p>}
-        <button disabled={busy} className="w-full rounded-lg bg-blue-900 px-4 py-3 font-semibold text-white disabled:opacity-50">
+        <button disabled={busy} className="w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white shadow hover:bg-blue-700 disabled:opacity-50">
           {busy ? "Saving..." : "Save details"}
         </button>
         {hasProfile && (
@@ -261,7 +242,91 @@ export default function TraineePage() {
             className="w-full text-sm text-slate-500 underline">Cancel</button>
         )}
       </form>
-      )}
-    </main>
+    </Card>
+  );
+
+  return (
+    <div className="min-h-screen flex-1 bg-slate-50">
+      <header className="bg-gradient-to-br from-[#0b2a6b] via-[#0f3a8f] to-[#1d5fd6] pb-16 pt-4 text-white">
+        <div className="mx-auto w-full max-w-5xl px-4 lg:px-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <img src="/assets/logo.png" alt="Rangwe TVC logo" className="h-9 w-auto rounded-md bg-white p-1" />
+              <p className="font-bold">ILO <span className="text-amber-400">Connect</span></p>
+            </div>
+            <button onClick={logout} className="rounded-lg bg-white/15 px-3 py-2 text-sm font-medium hover:bg-white/25">Log out</button>
+          </div>
+          <div className="mt-6 flex items-center gap-4">
+            <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-amber-400 text-xl font-bold text-[#0b2a6b]">{initials}</span>
+            <div className="min-w-0">
+              <h1 className="truncate text-xl font-bold sm:text-2xl">{t.name}</h1>
+              <p className="truncate text-sm text-blue-100">{t.adm_no} · {t.email}</p>
+            </div>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Chip ok={me.letters.length > 0} yes="Letter approved" no="No letter yet" />
+            <Chip ok={!!me.assessor} yes="Assessor assigned" no="Assessor pending" />
+            <Chip ok={!!me.insurance} yes="Insurance letter ready" no="Insurance pending" />
+            <Chip ok={hasProfile} yes="Placement saved" no="Add placement details" />
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto -mt-10 grid w-full max-w-5xl gap-5 px-4 pb-10 lg:grid-cols-5 lg:px-8">
+        <div className="space-y-5 lg:col-span-2">
+          {me.whatsapp && (
+            <a
+              href={`https://wa.me/${me.whatsapp}?text=${encodeURIComponent(
+                `Hello ILO, this is ${t.name} (${t.adm_no}) from Rangwe TVC. I need help with my attachment: `,
+              )}`}
+              target="_blank" rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 rounded-2xl bg-green-600 px-4 py-3.5 font-semibold text-white shadow-md hover:bg-green-700"
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.5 7.3L3 20l1.3-5.3A8.4 8.4 0 1 1 21 11.5z" /></svg>
+              Contact the ILO on WhatsApp
+            </a>
+          )}
+
+          <Card icon="user" title="Your assessor">
+            {me.assessor ? (
+              <div className="text-sm text-slate-700">
+                <p className="font-medium">{me.assessor.name}{me.assessor.department ? ` · ${me.assessor.department}` : ""}</p>
+                {me.assessor.phone && <p><a className="underline" href={`tel:${me.assessor.phone}`}>{me.assessor.phone}</a></p>}
+                {me.assessor.email && <p>{me.assessor.email}</p>}
+              </div>
+            ) : (
+              <p className="text-sm text-slate-600">Not assigned yet. The ILO will assign one and you will get an email.</p>
+            )}
+          </Card>
+
+          <Card icon="shield" title="Insurance letter">
+            {me.insurance ? (
+              <div className="flex items-center justify-between gap-2 text-sm">
+                <span className="min-w-0 truncate">{me.insurance.name}<br /><span className="text-slate-500">Uploaded {me.insurance.date}</span></span>
+                <a href="/api/trainee/insurance" className="shrink-0 rounded-lg bg-blue-600 px-3 py-2 font-medium text-white hover:bg-blue-700">Download</a>
+              </div>
+            ) : (
+              <p className="text-sm text-slate-600">
+                Not uploaded yet. The ILO uploads insurance letters as soon as the insurer sends them. Check back later.
+              </p>
+            )}
+          </Card>
+
+          <Card icon="file" title="Your letters">
+            {me.letters.length === 0 && <p className="text-sm text-slate-600">None yet.</p>}
+            <ul className="space-y-3">
+              {me.letters.map((l) => (
+                <li key={l.id} className="flex items-center justify-between gap-2 text-sm">
+                  <span className="min-w-0">{l.ref}<br /><span className="text-slate-500">{l.course}, Level {l.level} · {l.period}</span></span>
+                  <a href={`/api/trainee/letters/${l.id}`} className="shrink-0 rounded-lg px-3 py-2 ring-1 ring-slate-300 hover:bg-slate-50">Download</a>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </div>
+
+        <div className="lg:col-span-3">{details}</div>
+      </main>
+    </div>
   );
 }
