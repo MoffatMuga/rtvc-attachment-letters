@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { db, ensureDb, peekNextRef, toRow } from "@/lib/db";
 import { admKey } from "@/lib/duelist";
+import { courseLabel } from "@/lib/rules";
 
 export async function GET(req: NextRequest) {
   const denied = requireAdmin(req);
@@ -18,7 +19,7 @@ export async function GET(req: NextRequest) {
   return Response.json({
     requests: res.rows.map((r) => {
       const row = toRow(r as unknown as Record<string, unknown>);
-      return { ...row, due: listActive ? listed.has(admKey(row.adm_no)) : null };
+      return { ...row, label: courseLabel(row.course, row.section, row.cycle, row.level), due: listActive ? listed.has(admKey(row.adm_no)) : null };
     }),
     nextRef: await peekNextRef(),
   });

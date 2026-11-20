@@ -66,10 +66,9 @@ export default function TraineesAdmin() {
   });
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6">
+    <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-6">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-xl font-bold">Trainees and assessors</h1>
-        <a href="/admin" className="text-sm text-slate-500 underline">Back to requests</a>
       </div>
 
       <section className="mb-6 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">

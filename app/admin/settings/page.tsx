@@ -153,9 +153,8 @@ export default function Settings() {
   const dd = `${String(today.getDate()).padStart(2, "0")}/${String(today.getMonth() + 1).padStart(2, "0")}/${String(today.getFullYear()).slice(2)}`;
 
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6">
-      <a href="/admin" className="text-sm text-slate-500 underline">← Back to requests</a>
-      <h1 className="mt-2 mb-1 text-xl font-bold">Stamp &amp; signature</h1>
+    <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-6">
+      <h1 className="mb-1 text-xl font-bold">Stamp &amp; signature</h1>
       <p className="mb-4 text-sm text-slate-600">
         Scan or photograph your stamp on plain white paper, with the date box left empty. The white
         background is removed automatically and today&apos;s date is printed in the date box on every letter.

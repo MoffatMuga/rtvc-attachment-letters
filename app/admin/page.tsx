@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 type Row = {
   id: number; created_at: string; status: string; name: string; adm_no: string;
   email: string; phone: string; course: string; section: string; cycle: string; level: string; module: string;
-  start_month: number; start_year: number; ref: string | null; reject_reason: string | null; due?: boolean | null;
+  start_month: number; start_year: number; ref: string | null; reject_reason: string | null; due?: boolean | null; label?: string;
 };
 
 /** Kenyan phone to WhatsApp format (254...), or "" if it does not look valid. */
@@ -38,6 +38,7 @@ export default function Admin() {
   const [nextRef, setNextRef] = useState("");
   const [busyId, setBusyId] = useState<number | null>(null);
   const [message, setMessage] = useState("");
+  const [waNext, setWaNext] = useState<{ name: string; phone: string; href: string } | null>(null);
   const [wd, setWd] = useState<{ id: number; text: string } | null>(null);
 
   const load = useCallback(async () => {
@@ -58,13 +59,14 @@ export default function Admin() {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password }),
     });
-    if (res.ok) { setPassword(""); load(); } else setLoginError("Wrong password");
+    if (res.ok) { setPassword(""); window.dispatchEvent(new Event("admin-auth")); load(); } else setLoginError("Wrong password");
   }
 
-  async function logout() {
-    await fetch("/api/admin/logout", { method: "POST" });
-    setAuthed(false);
-  }
+  useEffect(() => {
+    const out = () => setAuthed(false);
+    window.addEventListener("admin-signed-out", out);
+    return () => window.removeEventListener("admin-signed-out", out);
+  }, []);
 
   async function approve(r: Row) {
     if (!confirm(`Approve and email the letter to ${r.name}?`)) return;
@@ -99,8 +101,11 @@ export default function Admin() {
       body: JSON.stringify({ reason: wd.text }),
     });
     const data = await res.json();
-    setMessage(res.ok ? `Withdrawn ${r.ref ?? ""} for ${r.name}${data.emailed ? " and emailed" : " (email could not be sent)"}. Open the Rejected tab to also WhatsApp them.` : data.error);
-    if (res.ok) setWd(null);
+    setMessage(res.ok ? `Withdrawn ${r.ref ?? ""} for ${r.name}${data.emailed ? " and emailed" : " (email could not be sent)"}. ` : data.error);
+    if (res.ok) {
+      setWaNext(waPhone(r.phone) ? { name: r.name, phone: r.phone, href: waLink({ name: r.name, phone: r.phone, status: "rejected", reject_reason: wd.text }) } : null);
+      setWd(null);
+    }
     setBusyId(null);
     load();
   }
@@ -123,33 +128,53 @@ export default function Admin() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6">
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold">Attachment requests</h1>
-        <button onClick={logout} className="text-sm text-slate-500 underline">Sign out</button>
-      </div>
-      <div className="mb-4 flex flex-wrap gap-2 text-sm">
-        <a href="/api/admin/log" className="rounded-lg bg-white px-3 py-2 ring-1 ring-slate-200">Download Excel log</a>
-        <a href="/admin/duelist" className="rounded-lg bg-white px-3 py-2 ring-1 ring-slate-200">Due list</a>
-        <a href="/admin/insurance" className="rounded-lg bg-white px-3 py-2 ring-1 ring-slate-200">Insurance</a>
-        <a href="/admin/feedback" className="rounded-lg bg-white px-3 py-2 ring-1 ring-slate-200">Feedback</a>
-        <a href="/admin/trainees" className="rounded-lg bg-white px-3 py-2 ring-1 ring-slate-200">Trainees &amp; assessors</a>
-        <a href="/admin/settings" className="rounded-lg bg-white px-3 py-2 ring-1 ring-slate-200">Stamp &amp; signature</a>
-        <span className="px-1 py-2 text-slate-500">Next ref: {nextRef}</span>
-      </div>
-      <div className="mb-4 flex gap-1 rounded-lg bg-slate-200 p-1 text-sm">
+    <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 lg:px-8">
+      <section className="mb-5 overflow-hidden rounded-2xl bg-gradient-to-r from-blue-50 via-white to-blue-50 p-5 shadow-sm ring-1 ring-slate-200">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-blue-600 text-white">
+              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l9-9a3.7 3.7 0 0 1 5.2 5.2l-9 9a1.8 1.8 0 0 1-2.6-2.6l8.3-8.3" /></svg>
+            </span>
+            <div>
+              <h1 className="text-xl font-bold text-slate-900 sm:text-2xl">Attachment requests</h1>
+              <p className="text-sm text-slate-500">Review, approve and track letters. Next ref: <span className="font-semibold text-blue-900">{nextRef}</span></p>
+            </div>
+          </div>
+          <a href="/api/admin/log" className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow hover:bg-blue-700">
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16" /></svg>
+            Download Excel log
+          </a>
+        </div>
+      </section>
+      <div className="mb-4 grid grid-cols-3 gap-1 rounded-xl bg-slate-100 p-1 text-sm">
         {TABS.map((t) => (
           <button key={t} onClick={() => setTab(t)}
-            className={`flex-1 rounded-md px-3 py-2 capitalize ${tab === t ? "bg-white font-semibold shadow-sm" : "text-slate-600"}`}>
+            className={`rounded-lg px-3 py-2.5 capitalize transition-colors ${tab === t ? "bg-blue-600 font-semibold text-white shadow" : "text-slate-600 hover:bg-white"}`}>
             {t}
           </button>
         ))}
       </div>
       {message && <p className="mb-3 rounded-lg bg-blue-50 p-3 text-sm text-blue-900">{message}</p>}
-      {rows.length === 0 && <p className="py-10 text-center text-slate-500">Nothing here.</p>}
-      <ul className="space-y-3">
+      {waNext && (
+        <div className="mb-3 flex items-center justify-between gap-2 rounded-lg bg-green-50 p-3 text-sm text-green-900">
+          <span>Also tell {waNext.name.split(" ")[0]} on WhatsApp?</span>
+          <span className="flex shrink-0 gap-2">
+            <a href={waNext.href} target="_blank" rel="noopener noreferrer" onClick={() => setWaNext(null)}
+              className="rounded-lg bg-green-600 px-3 py-2 font-medium text-white">WhatsApp 0{waPhone(waNext.phone).slice(3)}</a>
+            <button onClick={() => setWaNext(null)} className="text-slate-500 underline">Skip</button>
+          </span>
+        </div>
+      )}
+      {rows.length === 0 && (
+        <div className="rounded-2xl bg-white py-14 text-center shadow-sm ring-1 ring-slate-200">
+          <p className="text-lg font-semibold text-slate-800">Nothing here.</p>
+          <p className="mb-4 text-sm text-slate-500">No {tab} requests at the moment.</p>
+          <button onClick={load} className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700">Refresh</button>
+        </div>
+      )}
+      <ul className="grid gap-4 md:grid-cols-2">
         {rows.map((r) => (
-          <li key={r.id} className="rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+          <li key={r.id} className="self-start rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
             <p className="font-semibold">{r.name}
               {r.due === false && <span className="ml-2 rounded-full bg-red-100 px-2 py-0.5 align-middle text-xs font-medium text-red-700">Not on due list</span>}
               {r.due === true && <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 align-middle text-xs font-medium text-green-700">On due list</span>}
@@ -157,7 +182,7 @@ export default function Admin() {
             <p className="text-sm text-slate-600">{r.adm_no} · {r.email}</p>
             {r.phone && <p className="text-sm text-slate-600">{r.phone}</p>}
             <p className="text-sm text-slate-600">
-              {r.course}{r.section ? ` (${r.section})` : ""}, Cycle {r.cycle}, Level {r.level}{r.module ? `, Module ${r.module}` : ""}
+              {r.label ?? r.course}, Cycle {r.cycle}, Level {r.level}{r.module ? `, Module ${r.module}` : ""}
             </p>
             <p className="text-sm text-slate-600">
               Starts {MONTHS[r.start_month - 1]} {r.start_year}
@@ -203,7 +228,7 @@ export default function Admin() {
                 <p className="mb-1 font-medium text-red-800">Message to {r.name.split(" ")[0]} (sent by email)</p>
                 <textarea value={wd.text} onChange={(e) => setWd({ id: r.id, text: e.target.value })} rows={3} maxLength={400}
                   className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base" />
-                <div className="mt-2 flex gap-2">
+                <div className="mt-2 flex flex-wrap gap-2">
                   <button disabled={busyId === r.id || !wd.text.trim()} onClick={() => withdraw(r)}
                     className="rounded-lg bg-red-700 px-4 py-2 font-semibold text-white disabled:opacity-50">Withdraw &amp; email</button>
                   <button onClick={() => setWd(null)} className="rounded-lg px-4 py-2 ring-1 ring-slate-300">Cancel</button>
