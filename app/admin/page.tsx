@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 type Row = {
   id: number; created_at: string; status: string; name: string; adm_no: string;
   email: string; phone: string; course: string; section: string; cycle: string; level: string; module: string;
-  start_month: number; start_year: number; ref: string | null; reject_reason: string | null; due?: boolean | null;
+  start_month: number; start_year: number; ref: string | null; reject_reason: string | null; due?: boolean | null; label?: string;
 };
 
 /** Kenyan phone to WhatsApp format (254...), or "" if it does not look valid. */
@@ -171,7 +171,7 @@ export default function Admin() {
             <p className="text-sm text-slate-600">{r.adm_no} · {r.email}</p>
             {r.phone && <p className="text-sm text-slate-600">{r.phone}</p>}
             <p className="text-sm text-slate-600">
-              {r.course}{r.section ? ` (${r.section})` : ""}, Cycle {r.cycle}, Level {r.level}{r.module ? `, Module ${r.module}` : ""}
+              {r.label ?? r.course}, Cycle {r.cycle}, Level {r.level}{r.module ? `, Module ${r.module}` : ""}
             </p>
             <p className="text-sm text-slate-600">
               Starts {MONTHS[r.start_month - 1]} {r.start_year}

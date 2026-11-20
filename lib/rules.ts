@@ -17,6 +17,8 @@ type Cycles = Record<string, { levels: Record<string, Level> }>;
 type Course = {
   /** Text shown in brackets after the course name on the letter, e.g. "power option". */
   option?: string;
+  /** When true, the chosen section (or the level's option) REPLACES the course name on the letter. */
+  section_as_course?: boolean;
   /** Use "cycles" directly for a course with no sections... */
   cycles?: Cycles;
   /** ...or "sections" (e.g. Food and Beverage, Cosmetology), each with its own cycles. */
@@ -48,6 +50,9 @@ function resolve(course: string, section: string): Cycles {
  * Bracket text, in order of priority: the level's own "option" (e.g. Building Technology level 4 -> Masonry),
  * else the section name (unless it is the same as the course name), else the course's "option".
  */
+/** Courses where the section is the real course name (e.g. Hospitality -> Cosmetology). Can also be set per course in rules.json with "section_as_course": true/false. */
+const SECTION_AS_COURSE = ["hospitality", "building technology"];
+
 export function courseLabel(course: string, section = "", cycle = "", level = ""): string {
   const c = rules.courses[course];
   if (!c) return course;
@@ -65,6 +70,7 @@ export function courseLabel(course: string, section = "", cycle = "", level = ""
       tag = c.option;
     }
   }
+  if (tag && (c.section_as_course ?? SECTION_AS_COURSE.includes(course.trim().toLowerCase()))) return tag;
   return tag ? `${course} (${tag})` : course;
 }
 

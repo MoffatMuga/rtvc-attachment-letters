@@ -555,6 +555,13 @@
                 },
                 "6": {
                   "attachment_modules": {
+                    
+                    "5": {
+                      "same_as": [
+                        "5",
+                        "4"
+                      ]
+                    },
                     "6": {
                       "units": [
                         "Plaiting and Braiding",
