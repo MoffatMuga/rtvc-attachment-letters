@@ -201,7 +201,7 @@ export default function Home() {
                 {email2 && emailsMatch && <p className="mt-1 text-sm text-green-700">Emails match.</p>}
               </div>
               <div>
-                <label className={label}>Phone</label>
+                <label className={label}>WhatsApp Number</label>
                 <input type="tel" inputMode="tel" className={field} value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="0712 345 678" required autoComplete="tel" />
